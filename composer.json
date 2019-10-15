@@ -1,0 +1,41 @@
+{
+    "name": "symbiont/symbiont",
+    "description": "Symbiont is a purpose-built language for expressive data manipulations.",
+    "type": "project",
+    "license": "GPL-3.0-only",
+    "homepage": "https://janmarten.name/symbiont",
+    "authors": [
+        {
+            "name": "Jan-Marten de Boer",
+            "email": "symbiont@janmarten.name"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require": {
+        "php": "^7.3",
+        "ext-intl": "*",
+        "ext-json": "*"
+    },
+    "require-dev": {
+        "kint-php/kint": "^3.2",
+        "mediact/testing-suite": "@stable"
+    },
+    "autoload": {
+        "psr-4": {
+            "Symbiont\\": "src"
+        }
+    },
+    "archive": {
+        "exclude": [
+            "/.gitignore",
+            "/grumphp.yml",
+            "/phpmd.xml",
+            "/phpstan.neon",
+            "/phpunit.xml",
+            "/phpcs.xml"
+        ]
+    },
+    "config": {
+        "sort-packages": true
+    }
+}
