@@ -4,9 +4,9 @@ Symbiont is a purpose-built language for expressive data manipulation. It is
 named so, because it relies on a mutualistic symbiotic relationship with a
 host language.
 
-While closely resembling an expression language, Symbiont is able to keep and
-update state of data, as well as consume from and publish to external data
-sources. The extent of these capabilities heavily rely on the host language and
+As an expressive scripting language, Symbiont is able to keep and update state
+of data, as well as consume from and publish to external data sources.
+The extent of these capabilities heavily rely on the host language and
 implementation with that language.
 
 By design, the language is intended to be decoupled from the host language. The
