@@ -14,20 +14,8 @@ use Symbiont\Language\Tokenizer\Token;
 use Symbiont\Language\Tokenizer\TokenInterface;
 use Symbiont\Language\Tokenizer\UnexpectedTokenSequenceException;
 
-class EqualsAssignmentOperatorStrategy implements TokenStrategyInterface
+class EndStatementStrategy implements TokenStrategyInterface
 {
-    /**
-     * Whether the strategy supports the given character as start of a token.
-     *
-     * @param string $character
-     *
-     * @return bool
-     */
-    public function supports(string $character): bool
-    {
-        return $character === '=';
-    }
-
     /**
      * Whether the given sequence is a valid (subset of a) value.
      *
@@ -42,21 +30,9 @@ class EqualsAssignmentOperatorStrategy implements TokenStrategyInterface
      */
     public function validate(string $sequence): ?bool
     {
-        switch ($sequence) {
-            case '=':
-            case '==':
-                $resolution = static::RESOLUTION_CANDIDATE;
-                break;
-
-            case '===':
-                $resolution = static::RESOLUTION_RESOLVED;
-                break;
-
-            default:
-                $resolution = static::RESOLUTION_REJECTED;
-        }
-
-        return $resolution;
+        return $sequence === ';'
+            ? static::RESOLUTION_RESOLVED
+            : static::RESOLUTION_REJECTED;
     }
 
     /**
@@ -66,19 +42,10 @@ class EqualsAssignmentOperatorStrategy implements TokenStrategyInterface
      *
      * @return TokenInterface
      *
-     * @throws UnexpectedTokenSequenceException When the value is invalid.
+     * @throws UnexpectedTokenSequenceException When the value is not valid.
      */
     public function __invoke(string $value): TokenInterface
     {
-        switch ($value) {
-            case '=':
-                return new Token('T_ASSIGNMENT');
-
-            case '===':
-                return new Token('T_IS_EQUAL');
-
-            default:
-                throw new UnexpectedTokenSequenceException($value);
-        }
+        return new Token('T_END_STATEMENT', $value);
     }
 }

@@ -8,21 +8,19 @@
  * file that was distributed with this source code.
  */
 
-namespace Symbiont\Language\Tokenizer;
+namespace Symbiont\Language\Tokenizer\Optimizer;
 
 use Generator;
-use SplFileInfo;
+use Symbiont\Language\Tokenizer\TokenInterface;
 
-interface TokenizerInterface
+interface TokenOptimizerInterface
 {
     /**
-     * Tokenize the given file into a list of tokens.
+     * Optimize the given tokens, yielding only the tokens that are necessary.
      *
-     * @param SplFileInfo $file
+     * @param iterable|TokenInterface[] $tokens
      *
      * @return Generator|TokenInterface[]
-     *
-     * @throws UnexpectedTokenSequenceException When a token could not be resolved.
      */
-    public function __invoke(SplFileInfo $file): Generator;
+    public function __invoke(iterable $tokens): Generator;
 }

@@ -12,21 +12,10 @@ namespace Symbiont\Language\Tokenizer\Strategy;
 
 use Symbiont\Language\Tokenizer\Token;
 use Symbiont\Language\Tokenizer\TokenInterface;
+use Symbiont\Language\Tokenizer\UnexpectedTokenSequenceException;
 
 class VariableStrategy implements TokenStrategyInterface
 {
-    /**
-     * Whether the strategy supports the given character as start of a token.
-     *
-     * @param string $character
-     *
-     * @return bool
-     */
-    public function supports(string $character): bool
-    {
-        return $character === '$';
-    }
-
     /**
      * Whether the given sequence is a valid (subset of a) value.
      *
@@ -42,7 +31,7 @@ class VariableStrategy implements TokenStrategyInterface
     public function validate(string $sequence): ?bool
     {
         return (
-            preg_match('/^\$[a-z][a-zA-Z0-9]*$/', $sequence) > 0
+            preg_match('/^\$[a-zA-Z0-9_]*$/', $sequence) === 1
                 ? static::RESOLUTION_CANDIDATE
                 : static::RESOLUTION_REJECTED
         );
@@ -54,9 +43,16 @@ class VariableStrategy implements TokenStrategyInterface
      * @param string $value
      *
      * @return TokenInterface
+     *
+     * @throws UnexpectedTokenSequenceException When the value is less than 2 bytes
+     *   long.
      */
     public function __invoke(string $value): TokenInterface
     {
+        if (strlen($value) < 2) {
+            throw new UnexpectedTokenSequenceException($value);
+        }
+
         return new Token('T_VARIABLE', $value);
     }
 }

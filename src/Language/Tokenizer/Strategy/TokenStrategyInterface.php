@@ -20,15 +20,6 @@ interface TokenStrategyInterface
     public const RESOLUTION_REJECTED  = false;
 
     /**
-     * Whether the strategy supports the given character as start of a token.
-     *
-     * @param string $character
-     *
-     * @return bool
-     */
-    public function supports(string $character): bool;
-
-    /**
      * Whether the given sequence is a valid (subset of a) value.
      *
      * Return values have the following intent:
