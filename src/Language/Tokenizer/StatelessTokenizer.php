@@ -16,7 +16,7 @@ use Symbiont\Language\Tokenizer\Cursor\ImmutableCursor;
 use Symbiont\Language\Tokenizer\Finder\TokenFinderInterface;
 use Symbiont\Language\Tokenizer\Iterator\CodePointIterator;
 
-class Tokenizer implements TokenizerInterface
+class StatelessTokenizer implements TokenizerInterface
 {
     /** @var TokenFinderInterface */
     private $finder;
