@@ -97,7 +97,7 @@ class ContextFormatter
             if ($row === $end->getRow()) {
                 $output[] = str_repeat(
                     '─',
-                    $end->getColumn() + strlen($prefix) - 1
+                    $end->getColumn() + strlen($prefix)
                 ) . '┘';
             }
         }
