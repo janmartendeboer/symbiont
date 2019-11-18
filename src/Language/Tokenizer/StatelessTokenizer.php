@@ -12,6 +12,7 @@ namespace Symbiont\Language\Tokenizer;
 
 use Generator;
 use SplFileInfo;
+use Symbiont\Language\Tokenizer\Context\TokenContext;
 use Symbiont\Language\Tokenizer\Cursor\ImmutableCursor;
 use Symbiont\Language\Tokenizer\Finder\TokenFinderInterface;
 use Symbiont\Language\Tokenizer\Iterator\CodePointIterator;
@@ -52,16 +53,27 @@ class StatelessTokenizer implements TokenizerInterface
             $start = new ImmutableCursor($characters);
 
             try {
-                yield $this->finder->__invoke($characters);
+                $token = $this->finder->__invoke($characters);
             } catch (UnexpectedTokenSequenceException $exception) {
                 throw new UnexpectedTokenSequenceException(
                     $exception->getSequence(),
-                    $start,
-                    new ImmutableCursor($characters),
+                    new TokenContext(
+                        $file,
+                        $start,
+                        new ImmutableCursor($characters)
+                    ),
                     0,
                     $exception
                 );
             }
+
+            yield $token->withContext(
+                new TokenContext(
+                    $file,
+                    $start,
+                    new ImmutableCursor($characters)
+                )
+            );
 
             $numTokens++;
         }

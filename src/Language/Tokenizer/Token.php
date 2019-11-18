@@ -10,6 +10,8 @@
 
 namespace Symbiont\Language\Tokenizer;
 
+use Symbiont\Language\Tokenizer\Context\TokenContextInterface;
+
 class Token implements TokenInterface
 {
     /** @var string */
@@ -17,6 +19,9 @@ class Token implements TokenInterface
 
     /** @var string|null */
     private $value;
+
+    /** @var null|TokenContextInterface */
+    private $context = null;
 
     /**
      * Constructor.
@@ -48,5 +53,30 @@ class Token implements TokenInterface
     public function getValue(): ?string
     {
         return $this->value;
+    }
+
+    /**
+     * Get the context in which the token was found.
+     *
+     * @return TokenContextInterface|null
+     */
+    public function getContext(): ?TokenContextInterface
+    {
+        return $this->context;
+    }
+
+    /**
+     * Create a new token with the given context.
+     *
+     * @param TokenContextInterface $context
+     *
+     * @return TokenInterface
+     */
+    public function withContext(TokenContextInterface $context): TokenInterface
+    {
+        $token          = clone $this;
+        $token->context = $context;
+
+        return $token;
     }
 }

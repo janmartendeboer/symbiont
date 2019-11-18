@@ -8,12 +8,11 @@
  * file that was distributed with this source code.
  */
 
-namespace Symbiont\Language\Tokenizer\Cursor;
+namespace Symbiont\Language\Tokenizer\Context;
 
-use SplFileInfo;
 use SplFileObject;
 
-class ContextFormatter
+class TokenContextFormatter implements TokenContextFormatterInterface
 {
     /** @var int */
     private $before;
@@ -36,19 +35,16 @@ class ContextFormatter
     /**
      * Format context for the given file, using the given cursor.
      *
-     * @param SplFileInfo          $file
-     * @param CursorInterface      $start
-     * @param CursorInterface|null $end
+     * @param TokenContextInterface $context
      *
      * @return string
      */
-    public function __invoke(
-        SplFileInfo $file,
-        CursorInterface $start,
-        CursorInterface $end = null
-    ): string {
-        $end     = $end ?? $start;
+    public function __invoke(TokenContextInterface $context): string
+    {
         $output  = [];
+        $start   = $context->getStart();
+        $end     = $context->getEnd();
+        $file    = $context->getFile();
         $context = [];
         $buffer  = $file instanceof SplFileObject
             ? $file

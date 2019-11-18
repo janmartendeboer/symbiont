@@ -11,7 +11,7 @@
 namespace Symbiont\Language\Tokenizer;
 
 use DomainException;
-use Symbiont\Language\Tokenizer\Cursor\CursorInterface;
+use Symbiont\Language\Tokenizer\Context\TokenContextInterface;
 use Throwable;
 
 class UnexpectedTokenSequenceException extends DomainException
@@ -19,40 +19,37 @@ class UnexpectedTokenSequenceException extends DomainException
     /** @var string */
     private $sequence;
 
-    /** @var CursorInterface|null */
-    private $start;
-
-    /** @var CursorInterface|null */
-    private $end;
+    /** @var TokenContextInterface|null */
+    private $context;
 
     /**
      * Constructor.
      *
-     * @param string               $sequence
-     * @param CursorInterface|null $start
-     * @param CursorInterface|null $end
-     * @param int                  $code
-     * @param Throwable|null       $previous
+     * @param string                     $sequence
+     * @param TokenContextInterface|null $context
+     * @param int                        $code
+     * @param Throwable|null             $previous
      */
     public function __construct(
         string $sequence,
-        CursorInterface $start = null,
-        CursorInterface $end = null,
+        TokenContextInterface $context = null,
         int $code = 0,
         Throwable $previous = null
     ) {
         $this->sequence = $sequence;
-        $this->start    = $start;
-        $this->end      = $end ?? $start;
+        $this->context  = $context;
 
         $message = sprintf(
             'Unexpected token sequence %s',
             json_encode($sequence)
         );
 
-        if ($start !== null) {
+        if ($context !== null) {
+            $start = $context->getStart();
+
             $message .= sprintf(
-                ' at line %d column %d',
+                ' in file %s at line %d column %d',
+                $context->getFile()->getPathname(),
                 $start->getRow() + 1,
                 $start->getColumn() + 1
             );
@@ -72,22 +69,12 @@ class UnexpectedTokenSequenceException extends DomainException
     }
 
     /**
-     * Get the current cursor for the start of the exception.
+     * Get the context in which the unexpected sequence was encountered.
      *
-     * @return CursorInterface|null
+     * @return TokenContextInterface|null
      */
-    public function getStart(): ?CursorInterface
+    public function getContext(): ?TokenContextInterface
     {
-        return $this->start;
-    }
-
-    /**
-     * Get the current cursor for the end of the exception.
-     *
-     * @return CursorInterface|null
-     */
-    public function getEnd(): ?CursorInterface
-    {
-        return $this->end;
+        return $this->context;
     }
 }
