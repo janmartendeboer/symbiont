@@ -45,7 +45,7 @@ class TokenFinder implements TokenFinderInterface
         $strategies = $this->strategies;
         $previous   = [];
 
-        while ($strategies !== []) {
+        while ($strategies !== [] && $characters->valid()) {
             foreach ($strategies as $index => $strategy) {
                 $resolution = $strategy->validate($sequence);
 
