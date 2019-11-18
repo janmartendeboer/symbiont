@@ -49,14 +49,15 @@ class StatelessTokenizer implements TokenizerInterface
 
         while ($characters->valid()) {
             // Keep track of the current offset of code.
-            $offset = new ImmutableCursor($characters);
+            $start = new ImmutableCursor($characters);
 
             try {
                 yield $this->finder->__invoke($characters);
             } catch (UnexpectedTokenSequenceException $exception) {
                 throw new UnexpectedTokenSequenceException(
                     $exception->getSequence(),
-                    $offset,
+                    $start,
+                    new ImmutableCursor($characters),
                     0,
                     $exception
                 );

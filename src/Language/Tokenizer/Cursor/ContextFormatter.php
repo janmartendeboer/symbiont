@@ -24,25 +24,30 @@ class ContextFormatter
     /**
      * Constructor.
      *
-     * @param int $before
-     * @param int $after
+     * @param int      $before
+     * @param int|null $after  Inherits from $before when omitted.
      */
-    public function __construct(int $before = 1, int $after = 1)
+    public function __construct(int $before = 1, int $after = null)
     {
         $this->before = $before;
-        $this->after  = $after;
+        $this->after  = $after ?? $before;
     }
 
     /**
      * Format context for the given file, using the given cursor.
      *
-     * @param SplFileInfo     $file
-     * @param CursorInterface $cursor
+     * @param SplFileInfo          $file
+     * @param CursorInterface      $start
+     * @param CursorInterface|null $end
      *
      * @return string
      */
-    public function __invoke(SplFileInfo $file, CursorInterface $cursor): string
-    {
+    public function __invoke(
+        SplFileInfo $file,
+        CursorInterface $start,
+        CursorInterface $end = null
+    ): string {
+        $end     = $end ?? $start;
         $output  = [];
         $context = [];
         $buffer  = $file instanceof SplFileObject
@@ -54,7 +59,7 @@ class ContextFormatter
 
         foreach ($buffer as $row => $text) {
             // These lines are before the target context.
-            if ($row < $cursor->getRow() - $this->before) {
+            if ($row < $start->getRow() - $this->before) {
                 continue;
             }
 
@@ -62,12 +67,12 @@ class ContextFormatter
             $context[$row] = rtrim($text);
 
             // These lines are after the target context.
-            if ($row >= $cursor->getRow() + $this->after) {
+            if ($row >= $end->getRow() + $this->after) {
                 break;
             }
         }
 
-        $highestLine    = $cursor->getRow() + $this->after + 1;
+        $highestLine    = $end->getRow() + $this->after + 1;
         $lineColumnSize = strlen((string)$highestLine) + 2;
 
         foreach ($context as $row => $line) {
@@ -78,15 +83,23 @@ class ContextFormatter
                 ' '
             );
 
-            // Draw a line pointing to the column of the cursor.
-            if ($row === $cursor->getRow()) {
+            // Draw a line pointing to the column of the start cursor.
+            if ($row === $start->getRow()) {
                 $output[] = str_repeat(
                     '─',
-                    $cursor->getColumn() + strlen($prefix)
+                    $start->getColumn() + strlen($prefix)
                 ) . '╮';
             }
 
             $output[] = $prefix . $line;
+
+            // Draw a line pointing to the column of the end cursor.
+            if ($row === $end->getRow()) {
+                $output[] = str_repeat(
+                    '─',
+                    $end->getColumn() + strlen($prefix) - 1
+                ) . '┘';
+            }
         }
 
         return implode(PHP_EOL, $output);

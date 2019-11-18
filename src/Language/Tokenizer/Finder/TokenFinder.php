@@ -74,6 +74,6 @@ class TokenFinder implements TokenFinderInterface
 
         $strategy = reset($previous);
 
-        return $strategy->__invoke(substr($sequence, 0, -1));
+        return $strategy(substr($sequence, 0, -1));
     }
 }

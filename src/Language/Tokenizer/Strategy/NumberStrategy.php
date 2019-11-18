@@ -42,7 +42,7 @@ class NumberStrategy implements TokenStrategyInterface
                 (?:[eE]{0,1}[-+]?\d*)?
             )
         )$
-    /x
+    /xD
     REGEXP;
 
     // This relies on the PCRE2 implementation introduced in PHP 7.3.
@@ -139,8 +139,6 @@ class NumberStrategy implements TokenStrategyInterface
      */
     public function __invoke(string $value): TokenInterface
     {
-        $value = trim($value);
-
         // Full numbers must match the grammar.
         if (!preg_match(static::GRAMMAR, $value)) {
             throw new UnexpectedTokenSequenceException($value);

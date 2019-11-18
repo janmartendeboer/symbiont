@@ -20,35 +20,41 @@ class UnexpectedTokenSequenceException extends DomainException
     private $sequence;
 
     /** @var CursorInterface|null */
-    private $cursor;
+    private $start;
+
+    /** @var CursorInterface|null */
+    private $end;
 
     /**
      * Constructor.
      *
      * @param string               $sequence
-     * @param CursorInterface|null $cursor
+     * @param CursorInterface|null $start
+     * @param CursorInterface|null $end
      * @param int                  $code
      * @param Throwable|null       $previous
      */
     public function __construct(
         string $sequence,
-        CursorInterface $cursor = null,
+        CursorInterface $start = null,
+        CursorInterface $end = null,
         int $code = 0,
         Throwable $previous = null
     ) {
         $this->sequence = $sequence;
-        $this->cursor   = $cursor;
+        $this->start    = $start;
+        $this->end      = $end ?? $start;
 
         $message = sprintf(
             'Unexpected token sequence %s',
             json_encode($sequence)
         );
 
-        if ($cursor !== null) {
+        if ($start !== null) {
             $message .= sprintf(
                 ' at line %d column %d',
-                $cursor->getRow() + 1,
-                $cursor->getColumn() + 1
+                $start->getRow() + 1,
+                $start->getColumn() + 1
             );
         }
 
@@ -66,12 +72,22 @@ class UnexpectedTokenSequenceException extends DomainException
     }
 
     /**
-     * Get the current cursor for the origin of the exception.
+     * Get the current cursor for the start of the exception.
      *
      * @return CursorInterface|null
      */
-    public function getCursor(): ?CursorInterface
+    public function getStart(): ?CursorInterface
     {
-        return $this->cursor;
+        return $this->start;
+    }
+
+    /**
+     * Get the current cursor for the end of the exception.
+     *
+     * @return CursorInterface|null
+     */
+    public function getEnd(): ?CursorInterface
+    {
+        return $this->end;
     }
 }
