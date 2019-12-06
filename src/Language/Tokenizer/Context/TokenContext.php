@@ -15,14 +15,11 @@ use Symbiont\Language\Tokenizer\Cursor\CursorInterface;
 
 class TokenContext implements TokenContextInterface
 {
-    /** @var SplFileInfo */
-    private $file;
+    private SplFileInfo $file;
 
-    /** @var CursorInterface */
-    private $start;
+    private CursorInterface $start;
 
-    /** @var CursorInterface */
-    private $end;
+    private CursorInterface $end;
 
     /**
      * Constructor.

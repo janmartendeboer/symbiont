@@ -14,44 +14,8 @@ use Symbiont\Language\Tokenizer\Token;
 use Symbiont\Language\Tokenizer\TokenInterface;
 use Symbiont\Language\Tokenizer\UnexpectedTokenSequenceException;
 
-class OperatorStrategy implements TokenStrategyInterface
+class CommentStrategy implements TokenStrategyInterface
 {
-    /** @var string[] */
-    private $operators;
-
-    /**
-     * Constructor.
-     *
-     * @param string ...$operators
-     */
-    public function __construct(string ...$operators)
-    {
-        $this->operators = $operators;
-    }
-
-    /**
-     * Get the available operators up to the length amount of bytes.
-     *
-     * @param int $length
-     *
-     * @return array
-     */
-    private function getOptions(int $length): array
-    {
-        return array_reduce(
-            $this->operators,
-            function (array $carry, string $assignment) use ($length) {
-                if (strlen($assignment) >= $length) {
-                    $subject         = substr($assignment, 0, $length);
-                    $carry[$subject] = $subject;
-                }
-
-                return $carry;
-            },
-            []
-        );
-    }
-
     /**
      * Whether the given sequence is a valid (subset of a) value.
      *
@@ -66,9 +30,11 @@ class OperatorStrategy implements TokenStrategyInterface
      */
     public function validate(string $sequence): ?bool
     {
-        return in_array($sequence, $this->getOptions(strlen($sequence)), true)
-            ? self::RESOLUTION_CANDIDATE
-            : self::RESOLUTION_REJECTED;
+        return (
+            preg_match('/^#[^\n\r]*$/', $sequence) === 1
+                ? static::RESOLUTION_CANDIDATE
+                : static::RESOLUTION_REJECTED
+        );
     }
 
     /**
@@ -82,10 +48,6 @@ class OperatorStrategy implements TokenStrategyInterface
      */
     public function __invoke(string $value): TokenInterface
     {
-        if (!in_array($value, $this->operators, true)) {
-            throw new UnexpectedTokenSequenceException($value);
-        }
-
-        return new Token('T_OPERATOR', $value);
+        return new Token('T_WHITESPACE', $value);
     }
 }

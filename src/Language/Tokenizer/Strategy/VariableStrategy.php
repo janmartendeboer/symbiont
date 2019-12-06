@@ -31,7 +31,7 @@ class VariableStrategy implements TokenStrategyInterface
     public function validate(string $sequence): ?bool
     {
         return (
-            preg_match('/^\$[a-zA-Z0-9_]*$/', $sequence) === 1
+            preg_match('/^\$[a-zA-Z0-9_]*$/D', $sequence) === 1
                 ? static::RESOLUTION_CANDIDATE
                 : static::RESOLUTION_REJECTED
         );

@@ -14,11 +14,9 @@ use SplFileObject;
 
 class TokenContextFormatter implements TokenContextFormatterInterface
 {
-    /** @var int */
-    private $before;
+    private int $before;
 
-    /** @var int */
-    private $after;
+    private int $after;
 
     /**
      * Constructor.

@@ -10,9 +10,10 @@
 
 namespace Symbiont\Language\Tokenizer;
 
+use JsonSerializable;
 use Symbiont\Language\Tokenizer\Context\TokenContextInterface;
 
-interface TokenInterface
+interface TokenInterface extends JsonSerializable
 {
     /**
      * Get the name of the token.
@@ -20,6 +21,13 @@ interface TokenInterface
      * @return string
      */
     public function getName(): string;
+
+    /**
+     * Get the name of the token.
+     *
+     * @return string
+     */
+    public function __toString(): string;
 
     /**
      * Get the value of the token.
@@ -43,4 +51,11 @@ interface TokenInterface
      * @return TokenInterface
      */
     public function withContext(TokenContextInterface $context): TokenInterface;
+
+    /**
+     * Specify data which should be serialized to JSON.
+     *
+     * @return array
+     */
+    public function jsonSerialize(): array;
 }

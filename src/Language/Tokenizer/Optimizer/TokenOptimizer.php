@@ -15,6 +15,18 @@ use Symbiont\Language\Tokenizer\TokenInterface;
 
 class TokenOptimizer implements TokenOptimizerInterface
 {
+    private array $blacklist;
+
+    /**
+     * Constructor.
+     *
+     * @param string ...$blacklist
+     */
+    public function __construct(string ...$blacklist)
+    {
+        $this->blacklist = $blacklist;
+    }
+
     /**
      * Optimize the given tokens, yielding only the tokens that are necessary.
      *
@@ -26,7 +38,7 @@ class TokenOptimizer implements TokenOptimizerInterface
     {
         foreach ($tokens as $token) {
             if (!$token instanceof TokenInterface
-                || $token->getName() === 'T_WHITESPACE'
+                || in_array($token->getName(), $this->blacklist, true)
             ) {
                 continue;
             }

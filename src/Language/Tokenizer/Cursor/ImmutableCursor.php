@@ -12,11 +12,9 @@ namespace Symbiont\Language\Tokenizer\Cursor;
 
 class ImmutableCursor implements CursorInterface
 {
-    /** @var int */
-    private $row;
+    private int $row;
 
-    /** @var int */
-    private $column;
+    private int $column;
 
     /**
      * Constructor.

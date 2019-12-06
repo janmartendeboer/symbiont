@@ -14,13 +14,13 @@ use DomainException;
 use Symbiont\Language\Tokenizer\Context\TokenContextInterface;
 use Throwable;
 
-class UnexpectedTokenSequenceException extends DomainException
+class UnexpectedTokenSequenceException extends DomainException implements
+    ContextAwareExceptionInterface
 {
-    /** @var string */
-    private $sequence;
+    use ContextAwareExceptionTrait;
 
-    /** @var TokenContextInterface|null */
-    private $context;
+    /** @var string */
+    private string $sequence;
 
     /**
      * Constructor.
@@ -66,15 +66,5 @@ class UnexpectedTokenSequenceException extends DomainException
     public function getSequence(): string
     {
         return $this->sequence;
-    }
-
-    /**
-     * Get the context in which the unexpected sequence was encountered.
-     *
-     * @return TokenContextInterface|null
-     */
-    public function getContext(): ?TokenContextInterface
-    {
-        return $this->context;
     }
 }

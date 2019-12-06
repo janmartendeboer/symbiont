@@ -18,7 +18,7 @@ use Symbiont\Language\Tokenizer\UnexpectedTokenSequenceException;
 class TokenFinder implements TokenFinderInterface
 {
     /** @var TokenStrategyInterface[] */
-    private $strategies;
+    private iterable $strategies;
 
     /**
      * Constructor.

@@ -12,14 +12,20 @@
     ],
     "minimum-stability": "stable",
     "require": {
-        "php": "^7.3",
+        "php": "^7.4",
         "ext-intl": "*",
-        "ext-json": "*"
+        "ext-json": "*",
+        "ext-gmp": "*",
+        "ext-pcre": "*",
+        "lib-pcre": "*"
     },
     "require-dev": {
         "kint-php/kint": "^3.2",
         "mediact/testing-suite": "@stable"
     },
+    "bin": [
+        "bin/symbiont"
+    ],
     "autoload": {
         "psr-4": {
             "Symbiont\\": "src"
@@ -32,7 +38,8 @@
             "/phpmd.xml",
             "/phpstan.neon",
             "/phpunit.xml",
-            "/phpcs.xml"
+            "/phpcs.xml",
+            "/tests"
         ]
     },
     "config": {

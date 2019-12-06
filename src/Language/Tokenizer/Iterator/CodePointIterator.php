@@ -18,14 +18,11 @@ use Symbiont\Language\Tokenizer\Cursor\CursorInterface;
 
 class CodePointIterator implements Iterator, CursorInterface
 {
-    /** @var SplFileInfo */
-    private $file;
+    private SplFileInfo $file;
 
-    /** @var SplFileObject|null */
-    private $rows;
+    private ?SplFileObject $rows = null;
 
-    /** @var Iterator|null */
-    private $row;
+    private ?Iterator $row = null;
 
     /**
      * Constructor.

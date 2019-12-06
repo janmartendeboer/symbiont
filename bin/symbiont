@@ -1,0 +1,113 @@
+#!/usr/bin/env php
+<?php
+/**
+ * This file is part of the Symbiont package.
+ *
+ * (c) Jan-Marten de Boer <symbiont@janmarten.name>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+namespace Symbiont\Test;
+
+require_once __DIR__ . '/autoload.php';
+
+use SplFileObject;
+use Symbiont\Language\Parser\Parser;
+use Symbiont\Language\Parser\Symbol\Assignment;
+use Symbiont\Language\Parser\Symbol\Literal;
+use Symbiont\Language\Parser\Symbol\Name;
+use Symbiont\Language\Parser\Symbol\Symbol;
+use Symbiont\Language\Parser\Symbol\SymbolTable;
+use Symbiont\Language\Tokenizer\Context\TokenContextFormatter;
+use Symbiont\Language\Tokenizer\ContextAwareExceptionInterface;
+use Symbiont\Language\Tokenizer\Finder\TokenFinder;
+use Symbiont\Language\Tokenizer\Strategy\CommentStrategy;
+use Symbiont\Language\Tokenizer\Strategy\NumberStrategy;
+use Symbiont\Language\Tokenizer\Strategy\SymbolStrategy;
+use Symbiont\Language\Tokenizer\Strategy\VariableStrategy;
+use Symbiont\Language\Tokenizer\Strategy\WhitespaceStrategy;
+use Symbiont\Language\Tokenizer\StatelessTokenizer;
+use Symbiont\Language\Tokenizer\Optimizer\TokenOptimizer;
+use Symbiont\Language\Tokenizer\TokenStream;
+use Symbiont\Language\Tokenizer\UnexpectedEndOfStreamException;
+use Symbiont\Language\Tokenizer\UnexpectedTokenSequenceException;
+use Throwable;
+
+if ($argc < 2) {
+    echo 'Missing file argument.' . PHP_EOL;
+    exit(1);
+}
+
+$file      = new SplFileObject($argv[1], 'r');
+$optimizer = new TokenOptimizer('T_WHITESPACE', 'T_COMMENT');
+$symbols   = new SymbolTable();
+$tokenizer = new StatelessTokenizer(
+    new TokenFinder(
+        new WhitespaceStrategy(),
+        new CommentStrategy(),
+        new VariableStrategy(),
+        new NumberStrategy(),
+        new SymbolStrategy($symbols)
+    ),
+    'T_END'
+);
+
+// Variable symbols
+$symbols->register('T_NUMBER', new Literal());
+//$symbols->register('T_STRING', new Literal());
+$symbols->register('T_VARIABLE', new Name());
+
+// Static symbols
+$symbols->register('T_END_STATEMENT', new Symbol(';'));
+
+// Operators
+$symbols->register('T_ASSIGN', new Assignment(':'));
+//$symbols->register('T_PLUS_ASSIGN', new Assignment('+:'));
+//$symbols->register('T_MINUS_ASSIGN', new Assignment('-:'));
+
+$tokens = new TokenStream($optimizer($tokenizer($file)));
+$parser = new Parser(
+    $symbols,
+    'T_CURLY_OPEN',
+    'T_CURLY_CLOSE',
+    'T_END_STATEMENT',
+    'T_END'
+);
+
+try {
+    $statements = $parser($tokens);
+} catch (ContextAwareExceptionInterface $exception) {
+    echo $exception->getMessage() . PHP_EOL;
+
+    $context = $exception->getContext();
+
+    if ($context !== null) {
+        $formatter = new TokenContextFormatter();
+        echo PHP_EOL . $formatter($context) . PHP_EOL;
+    }
+
+    while ($exception = $exception->getPrevious()) {
+        if ($exception instanceof UnexpectedTokenSequenceException) {
+            continue;
+        }
+
+        echo PHP_EOL . '[_] ' . $exception->getMessage() . PHP_EOL;
+    }
+
+    exit(1);
+} catch (UnexpectedEndOfStreamException $exception) {
+    echo $exception->getMessage() . PHP_EOL;
+    exit(2);
+} catch (Throwable $exception) {
+    echo 'Language error: ';
+    echo $exception->getMessage() . PHP_EOL;
+    echo PHP_EOL . $exception->getTraceAsString() . PHP_EOL;
+    exit(3);
+}
+
+echo json_encode(
+    $statements,
+    JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE
+) . PHP_EOL;

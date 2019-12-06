@@ -14,14 +14,11 @@ use Symbiont\Language\Tokenizer\Context\TokenContextInterface;
 
 class Token implements TokenInterface
 {
-    /** @var string */
-    private $name;
+    private string $name;
 
-    /** @var string|null */
-    private $value;
+    private ?string $value;
 
-    /** @var null|TokenContextInterface */
-    private $context = null;
+    private ?TokenContextInterface $context = null;
 
     /**
      * Constructor.
@@ -41,6 +38,16 @@ class Token implements TokenInterface
      * @return string
      */
     public function getName(): string
+    {
+        return $this->name;
+    }
+
+    /**
+     * Get the name of the token.
+     *
+     * @return string
+     */
+    public function __toString(): string
     {
         return $this->name;
     }
@@ -78,5 +85,18 @@ class Token implements TokenInterface
         $token->context = $context;
 
         return $token;
+    }
+
+    /**
+     * Specify data which should be serialized to JSON.
+     *
+     * @return array
+     */
+    public function jsonSerialize(): array
+    {
+        return [
+            'name' => $this->name,
+            'value' => $this->value
+        ];
     }
 }

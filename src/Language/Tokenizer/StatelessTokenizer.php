@@ -19,17 +19,22 @@ use Symbiont\Language\Tokenizer\Iterator\CodePointIterator;
 
 class StatelessTokenizer implements TokenizerInterface
 {
-    /** @var TokenFinderInterface */
-    private $finder;
+    private ?string $endToken;
+
+    private TokenFinderInterface $finder;
 
     /**
      * Constructor.
      *
      * @param TokenFinderInterface $finder
+     * @param string|null          $endToken
      */
-    public function __construct(TokenFinderInterface $finder)
-    {
-        $this->finder = $finder;
+    public function __construct(
+        TokenFinderInterface $finder,
+        string $endToken = null
+    ) {
+        $this->finder   = $finder;
+        $this->endToken = $endToken;
     }
 
     /**
@@ -75,6 +80,18 @@ class StatelessTokenizer implements TokenizerInterface
                 )
             );
 
+            $numTokens++;
+        }
+
+        if ($this->endToken !== null) {
+            yield (
+                new Token($this->endToken)
+            )->withContext(
+                new TokenContext(
+                    $file,
+                    new ImmutableCursor($characters)
+                )
+            );
             $numTokens++;
         }
 
