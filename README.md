@@ -22,12 +22,14 @@ that is written in Simplified Javascript.
 A brief example of the syntax:
 
 ```javascript
-$catalog = @products;
-$product = $catalog.ensure('tnt');
+$catalog: @products;
+$product: $catalog.ensure('tnt');
 
-$product.branch('media_gallery_entries.*').filter(
-  $image => $image.get('file')/portrait\.(jpg|png)$/;
-);
+$product
+    .branch('media_gallery_entries.*')
+    .filter(
+        $image => $image.get('file') /portrait\.(jpg|png)$/;
+    );
 ```
 
 The example consists of:
@@ -47,3 +49,15 @@ The following operations are performed:
    `portrait.png` is kept.
 4. End of program clean-up is triggered. This ensures the modifications on
    `$product` are persisted to the `products` storage.
+
+The previous example is written verbosely to highlight individual parts of the
+syntax. The following code should work exactly the same:
+
+```javascript
+@products
+    .ensure('tnt')
+    .branch('media_gallery_entries.*')
+    .filter(
+        $image => $image.file /portrait\.(jpg|png)$/;
+    );
+```
