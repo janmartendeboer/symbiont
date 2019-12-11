@@ -10,7 +10,7 @@
 
 namespace Symbiont\Language\Parser\Symbol;
 
-interface SymbolTableInterface
+interface SymbolTableInterface extends SymbolHolderInterface
 {
     /**
      * Register the given symbol for the given token name.
@@ -29,13 +29,4 @@ interface SymbolTableInterface
      * @return string[]
      */
     public function getTokenSequences(): array;
-
-    /**
-     * Get the symbol for the given token.
-     *
-     * @param string $token
-     *
-     * @return SymbolInterface|null
-     */
-    public function getSymbol(string $token): ?SymbolInterface;
 }

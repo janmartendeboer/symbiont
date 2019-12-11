@@ -27,4 +27,30 @@ interface ScopeInterface
      * @throws SyntaxException When the node cannot be reserved.
      */
     public function reserve(NodeInterface $node, SymbolInterface $symbol): void;
+
+    /**
+     * Define the given node in the current scope.
+     *
+     * @param NodeInterface   $node
+     * @param SymbolInterface $symbol
+     *
+     * @return void
+     *
+     * @throws SyntaxException When the node cannot be defined.
+     */
+    public function define(NodeInterface $node, SymbolInterface $symbol): void;
+
+    /**
+     * Create a scope nested in the current scope.
+     *
+     * @return ScopeInterface
+     */
+    public function new(): ScopeInterface;
+
+    /**
+     * Get the scope parent.
+     *
+     * @return ScopeInterface|null
+     */
+    public function parent(): ?ScopeInterface;
 }

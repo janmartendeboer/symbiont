@@ -12,9 +12,14 @@ namespace Symbiont\Language\Parser;
 
 use Symbiont\Language\Ast\Node\NodeInterface;
 use Symbiont\Language\Parser\Scope\ScopeInterface;
+use Symbiont\Language\Parser\Symbol\SymbolHolderInterface;
+use Symbiont\Language\Tokenizer\TokenInterface;
 use Symbiont\Language\Tokenizer\TokenStreamInterface;
+use Symbiont\Language\Tokenizer\UnexpectedTokenException;
 
-interface ParseContextInterface extends TokenStreamInterface
+interface ParseContextInterface extends
+    TokenStreamInterface,
+    SymbolHolderInterface
 {
     /**
      * Get the current scope.
@@ -22,6 +27,21 @@ interface ParseContextInterface extends TokenStreamInterface
      * @return ScopeInterface
      */
     public function getScope(): ScopeInterface;
+
+    /**
+     * Create a sub-scope relative to the current scope and make it the current
+     * scope.
+     *
+     * @return ScopeInterface
+     */
+    public function newScope(): ScopeInterface;
+
+    /**
+     * Pop the scope and make the parent the current scope.
+     *
+     * @return ScopeInterface
+     */
+    public function popScope(): ScopeInterface;
 
     /**
      * Parse the current expression with the given binding power.
@@ -52,4 +72,17 @@ interface ParseContextInterface extends TokenStreamInterface
      * @return NodeInterface
      */
     public function parseBlock(): NodeInterface;
+
+    /**
+     * Get the current token, if the token stream has started.
+     *
+     * When a specific token is provided, the produced token must match.
+     *
+     * @param string|null $token
+     *
+     * @return TokenInterface|null
+     *
+     * @throws UnexpectedTokenException When the produced token does not match.
+     */
+    public function current(string $token = null): ?TokenInterface;
 }

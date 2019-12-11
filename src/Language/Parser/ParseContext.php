@@ -11,8 +11,10 @@
 namespace Symbiont\Language\Parser;
 
 use Symbiont\Language\Ast\Node\NodeInterface;
-use Symbiont\Language\Parser\Scope\Scope;
+use Symbiont\Language\Parser\Scope\BlockScope;
 use Symbiont\Language\Parser\Scope\ScopeInterface;
+use Symbiont\Language\Parser\Symbol\SymbolHolderInterface;
+use Symbiont\Language\Parser\Symbol\SymbolInterface;
 use Symbiont\Language\Tokenizer\TokenInterface;
 use Symbiont\Language\Tokenizer\TokenStreamInterface;
 use Symbiont\Language\Tokenizer\UnexpectedEndOfStreamException;
@@ -26,21 +28,26 @@ class ParseContext implements ParseContextInterface
 
     private TokenStreamInterface $tokens;
 
+    private SymbolHolderInterface $symbols;
+
     /**
      * Constructor.
      *
-     * @param ParserInterface      $parser
-     * @param TokenStreamInterface $tokens
-     * @param ScopeInterface|null  $scope
+     * @param ParserInterface       $parser
+     * @param TokenStreamInterface  $tokens
+     * @param SymbolHolderInterface $symbols
+     * @param ScopeInterface|null   $scope
      */
     public function __construct(
         ParserInterface $parser,
         TokenStreamInterface $tokens,
+        SymbolHolderInterface $symbols,
         ScopeInterface $scope = null
     ) {
-        $this->parser = $parser;
-        $this->tokens = $tokens;
-        $this->scope  = $scope ?? new Scope();
+        $this->parser  = $parser;
+        $this->tokens  = $tokens;
+        $this->symbols = $symbols;
+        $this->scope   = $scope ?? new BlockScope();
     }
 
     /**
@@ -74,11 +81,21 @@ class ParseContext implements ParseContextInterface
     /**
      * Get the current token, if the token stream has started.
      *
+     * @param string|null $token
+     *
      * @return TokenInterface|null
+     *
+     * @throws UnexpectedTokenException When the produced token does not match.
      */
-    public function current(): ?TokenInterface
+    public function current(string $token = null): ?TokenInterface
     {
-        return $this->tokens->current();
+        $current = $this->tokens->current();
+
+        if ($token !== null && $current->getName() !== $token) {
+            throw new UnexpectedTokenException($token, $current);
+        }
+
+        return $current;
     }
 
     /**
@@ -121,5 +138,38 @@ class ParseContext implements ParseContextInterface
     public function parseBlock(): NodeInterface
     {
         return $this->parser->parseBlock($this);
+    }
+
+    /**
+     * Get the symbol for the given token.
+     *
+     * @param string $token
+     *
+     * @return SymbolInterface|null
+     */
+    public function getSymbol(string $token): ?SymbolInterface
+    {
+        return $this->symbols->getSymbol($token);
+    }
+
+    /**
+     * Create a sub-scope relative to the current scope and make it the current
+     * scope.
+     *
+     * @return ScopeInterface
+     */
+    public function newScope(): ScopeInterface
+    {
+        return $this->scope = $this->scope->new();
+    }
+
+    /**
+     * Pop the scope and make the parent the current scope.
+     *
+     * @return ScopeInterface
+     */
+    public function popScope(): ScopeInterface
+    {
+        return $this->scope = $this->scope->parent();
     }
 }

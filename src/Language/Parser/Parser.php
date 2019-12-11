@@ -11,7 +11,7 @@
 namespace Symbiont\Language\Parser;
 
 use Symbiont\Language\Ast\Node\NodeInterface;
-use Symbiont\Language\Parser\Scope\Scope;
+use Symbiont\Language\Parser\Scope\BlockScope;
 use Symbiont\Language\Parser\Symbol\StatementSymbolInterface;
 use Symbiont\Language\Parser\Symbol\SymbolTableInterface;
 use Symbiont\Language\Tokenizer\TokenStreamInterface;
@@ -71,8 +71,7 @@ class Parser implements ParserInterface
      */
     public function __invoke(TokenStreamInterface $tokens): iterable
     {
-        $scope      = new Scope($this->symbols);
-        $context    = new ParseContext($this, $tokens, $scope);
+        $context    = new ParseContext($this, $tokens, $this->symbols);
         $statements = $this->parseStatements($context);
 
         // Ensure the end of the program is reached.

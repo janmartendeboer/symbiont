@@ -15,14 +15,15 @@ abstract class AbstractUnaryNode extends AbstractNode implements
 {
     protected string $arity = self::ARITY_UNARY;
 
-    protected NodeInterface $first;
+    /** @var mixed */
+    protected $first;
 
     /**
      * Get the first sub-node.
      *
-     * @return NodeInterface
+     * @return mixed
      */
-    public function getFirst(): NodeInterface
+    public function getFirst()
     {
         return $this->first;
     }

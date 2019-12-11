@@ -15,7 +15,7 @@ interface UnaryNodeInterface
     /**
      * Get the first sub-node.
      *
-     * @return NodeInterface
+     * @return mixed
      */
-    public function getFirst(): NodeInterface;
+    public function getFirst();
 }

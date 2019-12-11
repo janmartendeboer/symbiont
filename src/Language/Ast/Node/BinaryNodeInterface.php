@@ -15,7 +15,7 @@ interface BinaryNodeInterface extends UnaryNodeInterface
     /**
      * Get the second sub-node.
      *
-     * @return NodeInterface
+     * @return mixed
      */
-    public function getSecond(): NodeInterface;
+    public function getSecond();
 }

@@ -15,14 +15,15 @@ abstract class AbstractBinaryNode extends AbstractUnaryNode implements
 {
     protected string $arity = self::ARITY_BINARY;
 
-    protected NodeInterface $second;
+    /** @var mixed */
+    protected $second;
 
     /**
      * Get the second sub-node.
      *
-     * @return NodeInterface
+     * @return mixed
      */
-    public function getSecond(): NodeInterface
+    public function getSecond()
     {
         return $this->second;
     }

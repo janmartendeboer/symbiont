@@ -14,11 +14,17 @@ namespace Symbiont\Test;
 require_once __DIR__ . '/autoload.php';
 
 use SplFileObject;
+use Symbiont\Language\Ast\Node\FunctionNode;
+use Symbiont\Language\Ast\Node\NodeInterface;
+use Symbiont\Language\Parser\ParseContextInterface;
 use Symbiont\Language\Parser\Parser;
 use Symbiont\Language\Parser\Symbol\Assignment;
 use Symbiont\Language\Parser\Symbol\Literal;
 use Symbiont\Language\Parser\Symbol\Name;
+use Symbiont\Language\Parser\Symbol\Prefix;
+use Symbiont\Language\Parser\Symbol\Statement;
 use Symbiont\Language\Parser\Symbol\Symbol;
+use Symbiont\Language\Parser\Symbol\SymbolInterface;
 use Symbiont\Language\Parser\Symbol\SymbolTable;
 use Symbiont\Language\Tokenizer\Context\TokenContextFormatter;
 use Symbiont\Language\Tokenizer\ContextAwareExceptionInterface;
@@ -61,11 +67,106 @@ $symbols->register('T_VARIABLE', new Name());
 
 // Static symbols
 $symbols->register('T_END_STATEMENT', new Symbol(';'));
+$symbols->register('T_PAREN_CLOSE', new Symbol(')'));
+$symbols->register('T_CURLY_CLOSE', new Symbol('}'));
+$symbols->register('T_COMMA', new Symbol(','));
 
 // Operators
 $symbols->register('T_ASSIGN', new Assignment(':'));
 //$symbols->register('T_PLUS_ASSIGN', new Assignment('+:'));
 //$symbols->register('T_MINUS_ASSIGN', new Assignment('-:'));
+
+$symbols->register(
+    'T_PAREN_OPEN',
+    new Prefix(
+        '(',
+        function (ParseContextInterface $context): NodeInterface {
+            /** @var SymbolInterface $this */
+            $context->advance('T_PAREN_OPEN');
+            $expression = $context->parseExpression($this->getBindingPower());
+            //$context->advance('T_PAREN_CLOSE');
+
+            return $expression;
+        }
+    )
+);
+
+$symbols->register(
+    'T_CURLY_OPEN',
+    new Statement(
+        '{',
+        function (ParseContextInterface $context): iterable {
+            $context->advance('T_CURLY_OPEN');
+            $context->newScope();
+            $statements = $context->parseStatements();
+            $context->popScope();
+            $context->current('T_CURLY_CLOSE');
+
+            return $statements;
+        }
+    )
+);
+
+// Create a shared parser for all symbols that support an argument list.
+$argumentParser = function (ParseContextInterface $context): array {
+    $arguments = [];
+
+    $context->advance('T_PAREN_OPEN');
+
+    while ($context->current()->getName() !== 'T_PAREN_CLOSE') {
+        $name   = $context->current();
+        $symbol = $context->getSymbol($name);
+        $value  = $context->parseExpression(0);
+
+        $context->getScope()->define($value, $symbol);
+
+        $arguments[$name->getValue()] = $value;
+
+        $separator = $context->current();
+
+        if ($separator->getName() !== 'T_COMMA') {
+            break;
+        }
+
+        $context->advance('T_COMMA');
+    }
+
+    $context->advance('T_PAREN_CLOSE');
+
+    return $arguments;
+};
+
+// Prefixes
+$symbols->register(
+    'T_FUNCTION',
+    new Prefix(
+        'function',
+        function (
+            ParseContextInterface $context
+        ) use ($argumentParser): NodeInterface {
+            $token = $context->current();
+            $context->advance('T_FUNCTION');
+
+            // @todo support named functions.
+
+            $context->newScope();
+            $arguments = $argumentParser($context);
+
+            $context->advance('T_CURLY_OPEN');
+
+            $function = new FunctionNode(
+                $token,
+                $arguments,
+                $context->parseStatements()
+            );
+
+            $context->popScope();
+            $context->current('T_CURLY_CLOSE');
+
+            return $function;
+        }
+    )
+);
 
 $tokens = new TokenStream($optimizer($tokenizer($file)));
 $parser = new Parser(
@@ -78,13 +179,14 @@ $parser = new Parser(
 
 try {
     $statements = $parser($tokens);
-} catch (ContextAwareExceptionInterface $exception) {
+} /** @noinspection PhpRedundantCatchClauseInspection */
+    catch (ContextAwareExceptionInterface $exception) {
     echo $exception->getMessage() . PHP_EOL;
 
     $context = $exception->getContext();
 
     if ($context !== null) {
-        $formatter = new TokenContextFormatter();
+        $formatter = new TokenContextFormatter(5);
         echo PHP_EOL . $formatter($context) . PHP_EOL;
     }
 
