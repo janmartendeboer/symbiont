@@ -28,7 +28,7 @@ $product: $catalog.ensure('tnt');
 $product
     .branch('media_gallery_entries.*')
     .filter(
-        $image => $image.get('file') /portrait\.(jpg|png)$/;
+        $image => /portrait\.(jpg|png)$/.test($image.get('file'));
     );
 ```
 
@@ -58,6 +58,6 @@ syntax. The following code should work exactly the same:
     .ensure('tnt')
     .branch('media_gallery_entries.*')
     .filter(
-        $image => $image.file /portrait\.(jpg|png)$/;
+        $image => /portrait\.(jpg|png)$/.test($image.file);
     );
 ```
