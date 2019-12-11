@@ -12,8 +12,6 @@ namespace Symbiont\Language\Ast\Node;
 
 interface LiteralNodeInterface extends NodeInterface
 {
-    public const ARITY = 'literal';
-
     /**
      * Get the value of the literal node.
      *

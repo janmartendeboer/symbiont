@@ -10,7 +10,7 @@
 
 namespace Symbiont\Language\Parser\Symbol;
 
-use Symbiont\Language\Ast\Node\LiteralNode;
+use Symbiont\Language\Ast\Node\NamedNode;
 use Symbiont\Language\Ast\Node\NodeInterface;
 use Symbiont\Language\Parser\ParseContextInterface;
 
@@ -41,9 +41,6 @@ class Name implements SymbolInterface
     public function nud(
         ParseContextInterface $context
     ): NodeInterface {
-        // @todo Determine if the scope should reserve the variable.
-
-        // @todo change arity literal -> name.
-        return new LiteralNode($context->current());
+        return new NamedNode($context->current());
     }
 }

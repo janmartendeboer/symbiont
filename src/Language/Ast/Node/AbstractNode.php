@@ -17,6 +17,7 @@ abstract class AbstractNode implements NodeInterface
     protected const ARITY_TERNARY   = 'ternary';
     protected const ARITY_LITERAL   = 'literal';
     protected const ARITY_THIS      = 'this';
+    protected const ARITY_NAME      = 'name';
     protected const ARITY_FUNCTION  = 'function';
     protected const ARITY_STATEMENT = 'statement';
 
