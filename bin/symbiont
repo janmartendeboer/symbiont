@@ -84,7 +84,7 @@ $symbols->register(
             /** @var SymbolInterface $this */
             $context->advance('T_PAREN_OPEN');
             $expression = $context->parseExpression($this->getBindingPower());
-            //$context->advance('T_PAREN_CLOSE');
+            $context->current('T_PAREN_CLOSE');
 
             return $expression;
         }
