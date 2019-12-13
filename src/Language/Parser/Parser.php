@@ -11,7 +11,6 @@
 namespace Symbiont\Language\Parser;
 
 use Symbiont\Language\Ast\Node\NodeInterface;
-use Symbiont\Language\Parser\Scope\BlockScope;
 use Symbiont\Language\Parser\Symbol\StatementSymbolInterface;
 use Symbiont\Language\Parser\Symbol\SymbolTableInterface;
 use Symbiont\Language\Tokenizer\TokenStreamInterface;
