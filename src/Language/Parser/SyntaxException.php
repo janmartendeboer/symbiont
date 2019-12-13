@@ -45,7 +45,7 @@ class SyntaxException extends LogicException implements
 
         parent::__construct(
             sprintf(
-                'Invalid %s(%s) encountered. %s - In %s on line %d at offset %d',
+                'Invalid %s(%s) encountered. %s - In %s on line %d column %d',
                 static::createSymbolName($symbol),
                 json_encode(
                     $token->getValue(),
@@ -53,7 +53,7 @@ class SyntaxException extends LogicException implements
                 ),
                 $message,
                 $context->getFile()->getPathname(),
-                $cursor->getRow() + 1,
+                $cursor->getLine(),
                 $cursor->getColumn()
             ),
             $code,

@@ -40,11 +40,11 @@ class UnexpectedTokenException extends DomainException implements
 
         parent::__construct(
             sprintf(
-                'Unexpected token %s, expected %s in %s on line %d at offset %d.',
+                'Unexpected token %s, expected %s in %s on line %d column %d.',
                 $actual->getName(),
                 $expected,
                 $file->getPathname(),
-                $cursor->getRow() + 1,
+                $cursor->getLine(),
                 $cursor->getColumn()
             ),
             $code,

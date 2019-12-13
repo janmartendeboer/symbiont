@@ -17,7 +17,7 @@ interface CursorInterface
      *
      * @return int
      */
-    public function getRow(): int;
+    public function getLine(): int;
 
     /**
      * Get the current column.

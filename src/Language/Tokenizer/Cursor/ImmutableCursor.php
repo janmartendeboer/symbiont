@@ -12,7 +12,7 @@ namespace Symbiont\Language\Tokenizer\Cursor;
 
 class ImmutableCursor implements CursorInterface
 {
-    private int $row;
+    private int $line;
 
     private int $column;
 
@@ -23,7 +23,7 @@ class ImmutableCursor implements CursorInterface
      */
     public function __construct(CursorInterface $cursor)
     {
-        $this->row    = $cursor->getRow();
+        $this->line   = $cursor->getLine();
         $this->column = $cursor->getColumn();
     }
 
@@ -32,9 +32,9 @@ class ImmutableCursor implements CursorInterface
      *
      * @return int
      */
-    public function getRow(): int
+    public function getLine(): int
     {
-        return $this->row;
+        return $this->line;
     }
 
     /**

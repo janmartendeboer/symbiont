@@ -97,11 +97,15 @@ class CodePointIterator implements Iterator, CursorInterface
     /**
      * Return the key of the current element.
      *
-     * @return int|null
+     * @return string
      */
-    public function key(): ?int
+    public function key(): string
     {
-        return $this->rows->key();
+        return sprintf(
+            '%d:%d',
+            $this->getLine(),
+            $this->getColumn()
+        );
     }
 
     /**
@@ -128,7 +132,7 @@ class CodePointIterator implements Iterator, CursorInterface
     {
         $this->rows = null;
 
-        if ($this->file instanceof Iterator) {
+        if ($this->file instanceof SplFileObject) {
             $this->file->rewind();
             $this->rows = $this->file;
         }
@@ -145,9 +149,9 @@ class CodePointIterator implements Iterator, CursorInterface
      *
      * @return int
      */
-    public function getRow(): int
+    public function getLine(): int
     {
-        return $this->key();
+        return $this->rows->key() + 1;
     }
 
     /**
@@ -157,6 +161,8 @@ class CodePointIterator implements Iterator, CursorInterface
      */
     public function getColumn(): int
     {
-        return $this->row->key();
+        $offset = $this->row->key();
+
+        return $offset === null ? 0 : $offset + 1;
     }
 }

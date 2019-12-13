@@ -50,8 +50,8 @@ class UnexpectedTokenSequenceException extends DomainException implements
             $message .= sprintf(
                 ' in file %s at line %d column %d',
                 $context->getFile()->getPathname(),
-                $start->getRow() + 1,
-                $start->getColumn() + 1
+                $start->getLine(),
+                $start->getColumn()
             );
         }
 

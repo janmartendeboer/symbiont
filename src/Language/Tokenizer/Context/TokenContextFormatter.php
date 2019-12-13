@@ -52,46 +52,48 @@ class TokenContextFormatter implements TokenContextFormatterInterface
         $buffer->rewind();
 
         foreach ($buffer as $row => $text) {
+            $lineNumber = $row + 1;
+
             // These lines are before the target context.
-            if ($row < $start->getRow() - $this->before) {
+            if ($lineNumber < $start->getLine() - $this->before) {
                 continue;
             }
 
             // Fill the context.
-            $context[$row] = rtrim($text);
+            $context[$lineNumber] = rtrim($text);
 
             // These lines are after the target context.
-            if ($row >= $end->getRow() + $this->after) {
+            if ($lineNumber >= $end->getLine() + $this->after) {
                 break;
             }
         }
 
-        $highestLine    = $end->getRow() + $this->after + 1;
+        $highestLine    = $end->getLine() + $this->after + 1;
         $lineColumnSize = strlen((string)$highestLine) + 2;
 
-        foreach ($context as $row => $line) {
+        foreach ($context as $lineNumber => $line) {
             // Prefix the line number.
             $prefix = str_pad(
-                sprintf('%d: ', $row + 1),
+                sprintf('%d: ', $lineNumber),
                 $lineColumnSize,
                 ' '
             );
 
             // Draw a line pointing to the column of the start cursor.
-            if ($row === $start->getRow()) {
+            if ($lineNumber === $start->getLine()) {
                 $output[] = str_repeat(
                     '─',
-                    $start->getColumn() + strlen($prefix)
+                    $start->getColumn() + strlen($prefix) - 1
                 ) . '╮';
             }
 
             $output[] = $prefix . $line;
 
             // Draw a line pointing to the column of the end cursor.
-            if ($row === $end->getRow()) {
+            if ($lineNumber === $end->getLine()) {
                 $output[] = str_repeat(
                     '─',
-                    $end->getColumn() + strlen($prefix)
+                    $end->getColumn() + strlen($prefix) - 2
                 ) . '┘';
             }
         }
