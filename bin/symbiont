@@ -168,7 +168,6 @@ $symbols->register(
     )
 );
 
-$tokens = new TokenStream($optimizer($tokenizer($file)));
 $parser = new Parser(
     $symbols,
     'T_CURLY_OPEN',
@@ -178,7 +177,9 @@ $parser = new Parser(
 );
 
 try {
-    $statements = $parser($tokens);
+    $statements = $parser(
+        new TokenStream($optimizer($tokenizer($file)))
+    );
 } /** @noinspection PhpRedundantCatchClauseInspection */
     catch (ContextAwareExceptionInterface $exception) {
     echo $exception->getMessage() . PHP_EOL;
