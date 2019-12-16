@@ -10,7 +10,7 @@
 
 namespace Symbiont\Language\Parser\Symbol;
 
-use Symbiont\Language\Ast\Node\NodeInterface;
+use Symbiont\Language\Ast\Statement\StatementInterface;
 use Symbiont\Language\Parser\ParseContextInterface;
 
 interface StatementSymbolInterface extends SymbolInterface
@@ -20,7 +20,7 @@ interface StatementSymbolInterface extends SymbolInterface
      *
      * @param ParseContextInterface $context
      *
-     * @return null|NodeInterface|NodeInterface[]
+     * @return StatementInterface
      */
-    public function std(ParseContextInterface $context);
+    public function std(ParseContextInterface $context): StatementInterface;
 }

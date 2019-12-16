@@ -11,6 +11,8 @@
 namespace Symbiont\Language\Parser;
 
 use Symbiont\Language\Ast\Node\NodeInterface;
+use Symbiont\Language\Ast\Statement\StatementInterface;
+use Symbiont\Language\Ast\Statement\StatementListInterface;
 use Symbiont\Language\Tokenizer\TokenStreamInterface;
 
 interface ParserInterface
@@ -20,9 +22,11 @@ interface ParserInterface
      *
      * @param TokenStreamInterface $tokens
      *
-     * @return iterable|NodeInterface[]
+     * @return StatementListInterface
      */
-    public function __invoke(TokenStreamInterface $tokens): iterable;
+    public function __invoke(
+        TokenStreamInterface $tokens
+    ): StatementListInterface;
 
     /**
      * Parse the current expression with the given binding power.
@@ -42,27 +46,31 @@ interface ParserInterface
      *
      * @param ParseContextInterface $context
      *
-     * @return NodeInterface|NodeInterface[]|null
+     * @return StatementInterface
      */
     public function parseStatement(
         ParseContextInterface $context
-    );
+    ): StatementInterface;
 
     /**
      * Parse the current list of statements;
      *
      * @param ParseContextInterface $context
      *
-     * @return iterable|NodeInterface[]
+     * @return StatementListInterface
      */
-    public function parseStatements(ParseContextInterface $context): iterable;
+    public function parseStatements(
+        ParseContextInterface $context
+    ): StatementListInterface;
 
     /**
      * Parse the current code block.
      *
      * @param ParseContextInterface $context
      *
-     * @return NodeInterface
+     * @return StatementInterface
      */
-    public function parseBlock(ParseContextInterface $context): NodeInterface;
+    public function parseBlock(
+        ParseContextInterface $context
+    ): StatementInterface;
 }

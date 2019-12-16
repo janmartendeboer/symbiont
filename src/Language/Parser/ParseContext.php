@@ -10,7 +10,11 @@
 
 namespace Symbiont\Language\Parser;
 
+use ArrayIterator;
 use Symbiont\Language\Ast\Node\NodeInterface;
+use Symbiont\Language\Ast\Statement\StatementInterface;
+use Symbiont\Language\Ast\Statement\StatementList;
+use Symbiont\Language\Ast\Statement\StatementListInterface;
 use Symbiont\Language\Parser\Scope\BlockScope;
 use Symbiont\Language\Parser\Scope\ScopeInterface;
 use Symbiont\Language\Parser\Symbol\SymbolHolderInterface;
@@ -113,9 +117,9 @@ class ParseContext implements ParseContextInterface
     /**
      * Parse the current statement.
      *
-     * @return NodeInterface|NodeInterface[]|null
+     * @return StatementInterface
      */
-    public function parseStatement()
+    public function parseStatement(): StatementInterface
     {
         return $this->parser->parseStatement($this);
     }
@@ -123,19 +127,30 @@ class ParseContext implements ParseContextInterface
     /**
      * Parse the current list of statements.
      *
-     * @return iterable|NodeInterface[]
+     * @return StatementListInterface
      */
-    public function parseStatements(): iterable
+    public function parseStatements(): StatementListInterface
     {
-        return $this->parser->parseStatements($this);
+        // Workaround to parse nested statements synchronously.
+        // This is done so it is easier to assert the next token after parsing
+        // a block.
+        // It is done within the parse context, so the parser itself will yield
+        // One statement at a time, for the root scope.
+        return new StatementList(
+            new ArrayIterator(
+                iterator_to_array(
+                    $this->parser->parseStatements($this)
+                )
+            )
+        );
     }
 
     /**
      * Parse the current code block.
      *
-     * @return NodeInterface
+     * @return StatementInterface
      */
-    public function parseBlock(): NodeInterface
+    public function parseBlock(): StatementInterface
     {
         return $this->parser->parseBlock($this);
     }

@@ -11,6 +11,8 @@
 namespace Symbiont\Language\Parser;
 
 use Symbiont\Language\Ast\Node\NodeInterface;
+use Symbiont\Language\Ast\Statement\StatementInterface;
+use Symbiont\Language\Ast\Statement\StatementListInterface;
 use Symbiont\Language\Parser\Scope\ScopeInterface;
 use Symbiont\Language\Parser\Symbol\SymbolHolderInterface;
 use Symbiont\Language\Tokenizer\TokenInterface;
@@ -55,23 +57,23 @@ interface ParseContextInterface extends
     /**
      * Parse the current statement.
      *
-     * @return NodeInterface|NodeInterface[]|null
+     * @return StatementInterface
      */
-    public function parseStatement();
+    public function parseStatement(): StatementInterface;
 
     /**
      * Parse the current list of statements.
      *
-     * @return iterable|NodeInterface[]
+     * @return StatementListInterface
      */
-    public function parseStatements(): iterable;
+    public function parseStatements(): StatementListInterface;
 
     /**
      * Parse the current code block.
      *
-     * @return NodeInterface
+     * @return StatementInterface
      */
-    public function parseBlock(): NodeInterface;
+    public function parseBlock(): StatementInterface;
 
     /**
      * Get the current token, if the token stream has started.

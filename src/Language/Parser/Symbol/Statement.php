@@ -7,7 +7,8 @@
 namespace Symbiont\Language\Parser\Symbol;
 
 use Closure;
-use Symbiont\Language\Ast\Node\NodeInterface;
+use Symbiont\Language\Ast\Statement\Statement as AstStatement;
+use Symbiont\Language\Ast\Statement\StatementInterface;
 use Symbiont\Language\Parser\ParseContextInterface;
 
 class Statement implements StatementSymbolInterface
@@ -37,10 +38,12 @@ class Statement implements StatementSymbolInterface
      *
      * @param ParseContextInterface $context
      *
-     * @return null|NodeInterface|NodeInterface[]
+     * @return StatementInterface
      */
-    public function std(ParseContextInterface $context)
+    public function std(ParseContextInterface $context): StatementInterface
     {
-        return $this->std->call($this, $context);
+        return new AstStatement(
+            $this->std->call($this, $context) ?? []
+        );
     }
 }

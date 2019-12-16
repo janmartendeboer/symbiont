@@ -10,7 +10,13 @@
 
 namespace Symbiont\Language\Parser;
 
+use ArrayIterator;
+use Generator;
 use Symbiont\Language\Ast\Node\NodeInterface;
+use Symbiont\Language\Ast\Statement\Statement;
+use Symbiont\Language\Ast\Statement\StatementInterface;
+use Symbiont\Language\Ast\Statement\StatementList;
+use Symbiont\Language\Ast\Statement\StatementListInterface;
 use Symbiont\Language\Parser\Symbol\StatementSymbolInterface;
 use Symbiont\Language\Parser\Symbol\SymbolTableInterface;
 use Symbiont\Language\Tokenizer\TokenStreamInterface;
@@ -66,19 +72,25 @@ class Parser implements ParserInterface
      *
      * @param TokenStreamInterface $tokens
      *
-     * @return iterable|NodeInterface[]
+     * @return StatementListInterface
      */
-    public function __invoke(TokenStreamInterface $tokens): iterable
-    {
-        $context    = new ParseContext($this, $tokens, $this->symbols);
-        $statements = $this->parseStatements($context);
+    public function __invoke(
+        TokenStreamInterface $tokens
+    ): StatementListInterface {
+        $context          = new ParseContext($this, $tokens, $this->symbols);
+        $statementBuilder = function (
+            ParseContextInterface $context,
+            TokenStreamInterface $tokens
+        ): Generator {
+            yield from $this->parseStatements($context);
 
-        // Ensure the end of the program is reached.
-        if ($this->endToken !== null) {
-            $tokens->advance($this->endToken);
-        }
+            // Ensure the end of the program is reached.
+            if ($this->endToken !== null) {
+                $tokens->advance($this->endToken);
+            }
+        };
 
-        return $statements;
+        return new StatementList($statementBuilder($context, $tokens));
     }
 
     /**
@@ -115,20 +127,25 @@ class Parser implements ParserInterface
      *
      * @param ParseContextInterface $context
      *
-     * @return NodeInterface|NodeInterface[]|null
+     * @return StatementInterface
      */
     public function parseStatement(
         ParseContextInterface $context
-    ) {
+    ): StatementInterface {
         $token  = $context->current();
         $symbol = $this->symbols->getSymbol($token);
 
         if ($symbol instanceof StatementSymbolInterface) {
             $context->advance();
             $statement = $symbol->std($context);
-            $context->getScope()->reserve($statement, $symbol);
+            $statement->rewind();
+            $context->getScope()->reserve($statement->current(), $symbol);
         } else {
-            $statement = $context->parseExpression(0);
+            $statement = new Statement(
+                new ArrayIterator(
+                    [$context->parseExpression(0)]
+                )
+            );
 
             if ($this->endStatementToken !== null) {
                 $context->advance($this->endStatementToken);
@@ -143,29 +160,26 @@ class Parser implements ParserInterface
      *
      * @param ParseContextInterface $context
      *
-     * @return iterable|NodeInterface[]
+     * @return StatementListInterface
      */
-    public function parseStatements(ParseContextInterface $context): iterable
-    {
-        $statements = [];
+    public function parseStatements(
+        ParseContextInterface $context
+    ): StatementListInterface {
+        $statementBuilder = function (ParseContextInterface $context): Generator {
+            while (true) {
+                $token = $context->current();
 
-        while (true) {
-            $token = $context->current();
+                if ($token === null
+                    || in_array($token->getName(), $this->endStatementList, true)
+                ) {
+                    break;
+                }
 
-            if ($token === null
-                || in_array($token->getName(), $this->endStatementList, true)
-            ) {
-                break;
+                yield $context->parseStatement();
             }
+        };
 
-            $statement = $context->parseStatement();
-
-            if ($statement) {
-                $statements[] = $statement;
-            }
-        }
-
-        return $statements;
+        return new StatementList($statementBuilder($context));
     }
 
     /**
@@ -173,12 +187,13 @@ class Parser implements ParserInterface
      *
      * @param ParseContextInterface $context
      *
-     * @return NodeInterface
+     * @return StatementInterface
      *
      * @throws SyntaxException When the current symbol is not a statement.
      */
-    public function parseBlock(ParseContextInterface $context): NodeInterface
-    {
+    public function parseBlock(
+        ParseContextInterface $context
+    ): StatementInterface {
         $symbol = $this->symbols->getSymbol($context->current());
 
         if (!$symbol instanceof StatementSymbolInterface) {

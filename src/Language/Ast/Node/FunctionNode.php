@@ -6,6 +6,7 @@
 
 namespace Symbiont\Language\Ast\Node;
 
+use Symbiont\Language\Ast\Statement\StatementListInterface;
 use Symbiont\Language\Tokenizer\TokenInterface;
 
 class FunctionNode extends AbstractBinaryNode
@@ -15,14 +16,14 @@ class FunctionNode extends AbstractBinaryNode
     /**
      * Constructor.
      *
-     * @param TokenInterface  $token
-     * @param string[]        $argumentList
-     * @param NodeInterface[] $body
+     * @param TokenInterface         $token
+     * @param iterable               $argumentList
+     * @param StatementListInterface $body
      */
     public function __construct(
         TokenInterface $token,
         iterable $argumentList,
-        iterable $body
+        StatementListInterface $body
     ) {
         $this->token  = $token;
         $this->first  = $argumentList;
