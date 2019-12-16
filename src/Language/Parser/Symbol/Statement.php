@@ -6,10 +6,12 @@
 
 namespace Symbiont\Language\Parser\Symbol;
 
+use ArrayIterator;
 use Closure;
 use Symbiont\Language\Ast\Statement\Statement as AstStatement;
 use Symbiont\Language\Ast\Statement\StatementInterface;
 use Symbiont\Language\Parser\ParseContextInterface;
+use Traversable;
 
 class Statement implements StatementSymbolInterface
 {
@@ -42,8 +44,12 @@ class Statement implements StatementSymbolInterface
      */
     public function std(ParseContextInterface $context): StatementInterface
     {
+        $statement = $this->std->call($this, $context) ?? [];
+
         return new AstStatement(
-            $this->std->call($this, $context) ?? []
+            $statement instanceof Traversable
+                ? $statement
+                : new ArrayIterator((array)$statement)
         );
     }
 }
