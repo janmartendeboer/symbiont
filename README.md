@@ -17,6 +17,14 @@ Douglas Crockford's paper on a
 [parser for Simplified JavaScript](http://crockford.com/javascript/tdop/)
 that is written in Simplified Javascript.
 
+## In the wild
+
+Symbiont is used as an example language for the talk
+[On top of the Elephpant](https://www.meetup.com/GroningenPHP/events/jhvhqrybcpbhb/).
+*(Nov. 5th 2020)*
+
+Feel free to join. No prior knowledge of programming language design is expected.
+
 ## Syntax example
 
 A brief example of the syntax:
