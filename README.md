@@ -69,3 +69,42 @@ syntax. The following code should work exactly the same:
         $image => /portrait\.(jpg|png)$/.test($image.file);
     );
 ```
+
+# How to use Symbiont
+
+Currently, Symbiont can be run on a local installation of PHP >= PHP 7.4, or
+alternatively inside a Docker container.
+
+## Local PHP installation
+
+When PHP is installed locally, run your script as follows:
+
+```
+bin/symbiont /path/to/script.sym
+```
+
+Alternatively, one can start their script with a
+[Shebang](https://en.wikipedia.org/wiki/Shebang_(Unix)) pointing to Symbiont.
+
+```
+#!/path/to/symbiont
+```
+
+Since Symbiont is programmed to ignore all comments and whitespace while parsing,
+this does not interfere with the script.
+
+## Docker container
+
+> ★ Once Symbiont reaches a better stability, images will be pushed to Docker Hub.
+
+To build a fresh Docker image running Symbiont, run:
+
+```
+docker build -t symbiont:latest .
+```
+
+Then, to run a local symbiont script:
+
+```
+docker run --rm -v $PWD:/app symbiont:latest /path/to/script.sym
+```

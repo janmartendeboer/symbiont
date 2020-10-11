@@ -15,7 +15,6 @@
         "php": "^7.4",
         "ext-intl": "*",
         "ext-json": "*",
-        "ext-gmp": "*",
         "ext-pcre": "*",
         "lib-pcre": "*"
     },
@@ -29,6 +28,7 @@
     },
     "archive": {
         "exclude": [
+            "/.dockerignore",
             "/.gitignore",
             "/tests"
         ]

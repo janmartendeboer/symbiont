@@ -1,0 +1,5 @@
+.gitignore
+_config.yml
+README.md
+vendor/
+tests/

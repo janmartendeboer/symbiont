@@ -1,0 +1,21 @@
+# Negative float with exponent.
+-1.12e13;
+
+# Integers
+1;
+2;
+0;
+
+# Negative integers
+-12;
+-42;
+
+# Floats
+1.0;
+1.;
+.0;
+
+# Negative floats
+-33.;
+-33.0;
+-.33;
