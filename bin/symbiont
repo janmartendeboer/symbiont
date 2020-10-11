@@ -180,8 +180,7 @@ try {
     $statements = $parser(
         new TokenStream($optimizer($tokenizer($file)))
     );
-} /** @noinspection PhpRedundantCatchClauseInspection */
-    catch (ContextAwareExceptionInterface $exception) {
+} catch (ContextAwareExceptionInterface $exception) {
     echo $exception->getMessage() . PHP_EOL;
 
     $context = $exception->getContext();

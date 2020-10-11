@@ -19,10 +19,6 @@
         "ext-pcre": "*",
         "lib-pcre": "*"
     },
-    "require-dev": {
-        "kint-php/kint": "^3.2",
-        "mediact/testing-suite": "@stable"
-    },
     "bin": [
         "bin/symbiont"
     ],
@@ -34,15 +30,7 @@
     "archive": {
         "exclude": [
             "/.gitignore",
-            "/grumphp.yml",
-            "/phpmd.xml",
-            "/phpstan.neon",
-            "/phpunit.xml",
-            "/phpcs.xml",
             "/tests"
         ]
-    },
-    "config": {
-        "sort-packages": true
     }
 }
