@@ -14,29 +14,8 @@ namespace Symbiont\Test;
 require_once __DIR__ . '/autoload.php';
 
 use SplFileObject;
-use Symbiont\Language\Ast\Node\FunctionNode;
-use Symbiont\Language\Ast\Node\NodeInterface;
-use Symbiont\Language\Parser\ParseContextInterface;
-use Symbiont\Language\Parser\Parser;
-use Symbiont\Language\Parser\Symbol\Assignment;
-use Symbiont\Language\Parser\Symbol\Literal;
-use Symbiont\Language\Parser\Symbol\Name;
-use Symbiont\Language\Parser\Symbol\Prefix;
-use Symbiont\Language\Parser\Symbol\Statement;
-use Symbiont\Language\Parser\Symbol\Symbol;
-use Symbiont\Language\Parser\Symbol\SymbolInterface;
-use Symbiont\Language\Parser\Symbol\SymbolTable;
 use Symbiont\Language\Tokenizer\Context\TokenContextFormatter;
 use Symbiont\Language\Tokenizer\ContextAwareExceptionInterface;
-use Symbiont\Language\Tokenizer\Finder\TokenFinder;
-use Symbiont\Language\Tokenizer\Strategy\CommentStrategy;
-use Symbiont\Language\Tokenizer\Strategy\NumberStrategy;
-use Symbiont\Language\Tokenizer\Strategy\SymbolStrategy;
-use Symbiont\Language\Tokenizer\Strategy\VariableStrategy;
-use Symbiont\Language\Tokenizer\Strategy\WhitespaceStrategy;
-use Symbiont\Language\Tokenizer\StatelessTokenizer;
-use Symbiont\Language\Tokenizer\Optimizer\TokenOptimizer;
-use Symbiont\Language\Tokenizer\TokenStream;
 use Symbiont\Language\Tokenizer\UnexpectedEndOfStreamException;
 use Symbiont\Language\Tokenizer\UnexpectedTokenSequenceException;
 use Throwable;
@@ -46,28 +25,29 @@ if ($argc < 2) {
     exit(1);
 }
 
-$file      = new SplFileObject($argv[1], 'r');
-$tokenizer = require __DIR__ . '/../lang/tokenizer.php';
-$parser    = require __DIR__ . '/../lang/parser.php';
+$mode = getenv('SYMBIONT_MODE') ?: 'parse';
+$file = new SplFileObject($argv[1], 'r');
 
 $exceptionFormatter = function (Throwable $exception): void {
     if (getenv('VERBOSE')) {
-        echo get_class($exception) . ':' . PHP_EOL;
-        echo $exception->getTraceAsString() . PHP_EOL . PHP_EOL;
+        fwrite(
+                STDERR,
+            get_class($exception) . ':' . PHP_EOL
+            . $exception->getTraceAsString() . PHP_EOL . PHP_EOL
+        );
     }
 
-    echo $exception->getMessage() . PHP_EOL;
+    fwrite(STDERR, $exception->getMessage() . PHP_EOL);
 };
 
 try {
-    $statements = $parser(
-        new TokenStream($tokenizer($file))
-    );
+    /** @noinspection PhpIncludeInspection */
+    $runner = require __DIR__ . '/modes/' . basename($mode) . '.php';
 
-    echo json_encode(
-        $statements,
-        JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE
-    ) . PHP_EOL;
+    /** @noinspection PhpIncludeInspection */
+    $processor = require __DIR__ . '/modes/' . basename($mode) . '_output.php';
+
+    $processor($runner($file));
 } catch (ContextAwareExceptionInterface $exception) {
     $exceptionFormatter($exception);
 
@@ -75,7 +55,7 @@ try {
 
     if ($context !== null) {
         $formatter = new TokenContextFormatter(5);
-        echo PHP_EOL . $formatter($context) . PHP_EOL;
+        fwrite(STDERR, PHP_EOL . $formatter($context) . PHP_EOL);
     }
 
     while ($exception = $exception->getPrevious()) {
@@ -83,7 +63,7 @@ try {
             continue;
         }
 
-        echo PHP_EOL . '[_] ' . $exception->getMessage() . PHP_EOL;
+        fwrite(STDERR, PHP_EOL . '[_] ' . $exception->getMessage() . PHP_EOL);
     }
 
     exit(1);
@@ -92,7 +72,7 @@ try {
 
     exit(2);
 } catch (Throwable $exception) {
-    echo 'Language error: ';
+    fwrite(STDERR, 'Language error: ');
     $exceptionFormatter($exception);
 
     exit(3);
