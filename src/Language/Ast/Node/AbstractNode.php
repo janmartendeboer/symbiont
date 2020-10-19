@@ -12,34 +12,28 @@ namespace Symbiont\Language\Ast\Node;
 
 abstract class AbstractNode implements NodeInterface
 {
-    protected const ARITY_UNARY     = 'unary';
-    protected const ARITY_BINARY    = 'binary';
-    protected const ARITY_TERNARY   = 'ternary';
-    protected const ARITY_LITERAL   = 'literal';
-    protected const ARITY_THIS      = 'this';
-    protected const ARITY_NAME      = 'name';
-    protected const ARITY_FUNCTION  = 'function';
-    protected const ARITY_STATEMENT = 'statement';
-
-    protected string $arity;
+    protected ?Arity $arity = null;
 
     /**
      * Get the arity of the current node.
      *
-     * - unary
-     * - binary
-     * - ternary
-     * - literal
-     * - this
-     * - function
-     * - statement
-     *
-     * @return string
+     * @return Arity
      */
-    public function getArity(): string
+    public function getArity(): Arity
     {
+        if ($this->arity === null) {
+            $this->arity = $this->createArity();
+        }
+
         return $this->arity;
     }
+
+    /**
+     * Create the arity that matches the current node type.
+     *
+     * @return Arity
+     */
+    abstract protected function createArity(): Arity;
 
     /**
      * Specify data which should be serialized to JSON.

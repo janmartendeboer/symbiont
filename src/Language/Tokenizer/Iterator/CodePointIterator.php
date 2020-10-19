@@ -24,14 +24,18 @@ class CodePointIterator implements Iterator, CursorInterface
 
     private ?Iterator $row = null;
 
+    private string $locale;
+
     /**
      * Constructor.
      *
      * @param SplFileInfo $file
+     * @param string      $locale
      */
-    public function __construct(SplFileInfo $file)
+    public function __construct(SplFileInfo $file, string $locale = 'c')
     {
-        $this->file = $file;
+        $this->file   = $file;
+        $this->locale = $locale;
     }
 
     /**
@@ -83,10 +87,13 @@ class CodePointIterator implements Iterator, CursorInterface
         $row = null;
 
         if ($rows->valid()) {
-            $buffer = IntlBreakIterator::createCharacterInstance('c');
+            $buffer = IntlBreakIterator::createCharacterInstance($this->locale);
             $buffer->setText($this->rows->current());
 
-            /** @var Iterator $row */
+            /**
+             * @var Iterator $row
+             * @noinspection PhpVoidFunctionResultUsedInspection
+             */
             $row = $buffer->getPartsIterator();
             $row->rewind();
         }

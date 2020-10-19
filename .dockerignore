@@ -1,5 +1,6 @@
 .gitignore
 _config.yml
+dev
 README.md
 vendor/
 tests/

@@ -10,6 +10,7 @@
 
 namespace Symbiont\Language\Parser\Symbol;
 
+use Symbiont\Language\Ast\Node\Arity;
 use Symbiont\Language\Ast\Node\AssignmentNode;
 use Symbiont\Language\Ast\Node\LiteralNodeInterface;
 use Symbiont\Language\Ast\Node\NodeInterface;
@@ -78,6 +79,14 @@ class Assignment implements SymbolInterface
         TokenInterface $subject,
         NodeInterface $left
     ): NodeInterface {
+        if (!$left->getArity()->equals(Arity::name())) {
+            throw $this->createException(
+                $subject,
+                sprintf('Unexpected %s.', $left->getArity()),
+                $left
+            );
+        }
+
         return new AssignmentNode(
             $this->getSequence(),
             $subject,

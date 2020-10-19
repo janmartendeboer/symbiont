@@ -47,141 +47,29 @@ if ($argc < 2) {
 }
 
 $file      = new SplFileObject($argv[1], 'r');
-$optimizer = new TokenOptimizer('T_WHITESPACE', 'T_COMMENT');
-$symbols   = new SymbolTable();
-$tokenizer = new StatelessTokenizer(
-    new TokenFinder(
-        new WhitespaceStrategy(),
-        new CommentStrategy(),
-        new VariableStrategy(),
-        new NumberStrategy(),
-        new SymbolStrategy($symbols)
-    ),
-    'T_END'
-);
+$tokenizer = require __DIR__ . '/../lang/tokenizer.php';
+$parser    = require __DIR__ . '/../lang/parser.php';
 
-// Variable symbols
-$symbols->register('T_NUMBER', new Literal());
-//$symbols->register('T_STRING', new Literal());
-$symbols->register('T_VARIABLE', new Name());
-
-// Static symbols
-$symbols->register('T_END_STATEMENT', new Symbol(';'));
-$symbols->register('T_PAREN_CLOSE', new Symbol(')'));
-$symbols->register('T_CURLY_CLOSE', new Symbol('}'));
-$symbols->register('T_COMMA', new Symbol(','));
-
-// Operators
-$symbols->register('T_ASSIGN', new Assignment(':'));
-//$symbols->register('T_PLUS_ASSIGN', new Assignment('+:'));
-//$symbols->register('T_MINUS_ASSIGN', new Assignment('-:'));
-
-$symbols->register(
-    'T_PAREN_OPEN',
-    new Prefix(
-        '(',
-        function (ParseContextInterface $context): NodeInterface {
-            /** @var SymbolInterface $this */
-            $context->advance('T_PAREN_OPEN');
-            $expression = $context->parseExpression($this->getBindingPower());
-            $context->current('T_PAREN_CLOSE');
-
-            return $expression;
-        }
-    )
-);
-
-$symbols->register(
-    'T_CURLY_OPEN',
-    new Statement(
-        '{',
-        function (ParseContextInterface $context): iterable {
-            $context->advance('T_CURLY_OPEN');
-            $context->newScope();
-            $statements = $context->parseStatements();
-            $context->popScope();
-            $context->current('T_CURLY_CLOSE');
-
-            return $statements;
-        }
-    )
-);
-
-// Create a shared parser for all symbols that support an argument list.
-$argumentParser = function (ParseContextInterface $context): array {
-    $arguments = [];
-
-    $context->advance('T_PAREN_OPEN');
-
-    while ($context->current()->getName() !== 'T_PAREN_CLOSE') {
-        $name   = $context->current();
-        $symbol = $context->getSymbol($name);
-        $value  = $context->parseExpression(0);
-
-        $context->getScope()->define($value, $symbol);
-
-        $arguments[$name->getValue()] = $value;
-
-        $separator = $context->current();
-
-        if ($separator->getName() !== 'T_COMMA') {
-            break;
-        }
-
-        $context->advance('T_COMMA');
+$exceptionFormatter = function (Throwable $exception): void {
+    if (getenv('VERBOSE')) {
+        echo get_class($exception) . ':' . PHP_EOL;
+        echo $exception->getTraceAsString() . PHP_EOL . PHP_EOL;
     }
 
-    $context->advance('T_PAREN_CLOSE');
-
-    return $arguments;
+    echo $exception->getMessage() . PHP_EOL;
 };
-
-// Prefixes
-$symbols->register(
-    'T_FUNCTION',
-    new Prefix(
-        'function',
-        function (
-            ParseContextInterface $context
-        ) use ($argumentParser): NodeInterface {
-            $token = $context->current();
-            $context->advance('T_FUNCTION');
-
-            // @todo support named functions.
-
-            $context->newScope();
-            $arguments = $argumentParser($context);
-
-            $context->advance('T_CURLY_OPEN');
-
-            $function = new FunctionNode(
-                $token,
-                $arguments,
-                $context->parseStatements()
-            );
-
-            $context->popScope();
-            $context->current('T_CURLY_CLOSE');
-
-            return $function;
-        }
-    )
-);
-
-$parser = new Parser(
-    $symbols,
-    'T_CURLY_OPEN',
-    'T_CURLY_CLOSE',
-    'T_END_STATEMENT',
-    'T_END'
-);
 
 try {
     $statements = $parser(
-        new TokenStream($optimizer($tokenizer($file)))
+        new TokenStream($tokenizer($file))
     );
+
+    echo json_encode(
+        $statements,
+        JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE
+    ) . PHP_EOL;
 } catch (ContextAwareExceptionInterface $exception) {
-    echo $exception->getMessage() . PHP_EOL;
+    $exceptionFormatter($exception);
 
     $context = $exception->getContext();
 
@@ -200,16 +88,12 @@ try {
 
     exit(1);
 } catch (UnexpectedEndOfStreamException $exception) {
-    echo $exception->getMessage() . PHP_EOL;
+    $exceptionFormatter($exception);
+
     exit(2);
 } catch (Throwable $exception) {
     echo 'Language error: ';
-    echo $exception->getMessage() . PHP_EOL;
-    echo PHP_EOL . $exception->getTraceAsString() . PHP_EOL;
+    $exceptionFormatter($exception);
+
     exit(3);
 }
-
-echo json_encode(
-    $statements,
-    JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE
-) . PHP_EOL;

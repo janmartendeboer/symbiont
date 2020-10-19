@@ -16,6 +16,8 @@ use Symbiont\Language\Tokenizer\UnexpectedTokenSequenceException;
 
 class WhitespaceStrategy implements TokenStrategyInterface
 {
+    public const TOKEN_NAME = 'T_WHITESPACE';
+
     /**
      * Whether the given sequence is a valid (subset of a) value.
      *
@@ -48,6 +50,6 @@ class WhitespaceStrategy implements TokenStrategyInterface
      */
     public function __invoke(string $value): TokenInterface
     {
-        return new Token('T_WHITESPACE', $value);
+        return new Token(static::TOKEN_NAME, $value);
     }
 }

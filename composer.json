@@ -28,6 +28,7 @@
     },
     "archive": {
         "exclude": [
+            "/dev",
             "/.dockerignore",
             "/.gitignore",
             "/tests"

@@ -106,5 +106,18 @@ docker build -t symbiont:latest .
 Then, to run a local symbiont script:
 
 ```
-docker run --rm -v $PWD:/app symbiont:latest /path/to/script.sym
+docker run --rm -v $PWD:/app symbiont:latest tests/types/numbers.sym
+```
+
+## Development
+
+To rebuild a fresh image after each changed line of code, would slow down
+development.
+
+While one can set up a prepared running container and mount the local project,
+for ease of use, there is a `dev` script that uses an existing image with all
+the platform requirements installed.
+
+```
+./dev tests/types/numbers.sym
 ```

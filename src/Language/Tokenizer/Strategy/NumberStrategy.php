@@ -19,13 +19,13 @@ class NumberStrategy implements TokenStrategyInterface
     private const SEARCH_PATTERN = <<<'REGEXP'
     /
         ^(?:
-            # Binary numbers.
-            (?:0b[01]+)
-    
-            |
-    
-            # Hex numbers.
-            (?:0x[0-9a-fA-F]+)
+            # Hex and Binary numbers.
+            (?:0
+                (
+                    ([bB]?[01]*)
+                    | ([xX]?[0-9a-fA-F]*)
+                )?
+            )
     
             | (?:
                 # Positive or negative numbers
@@ -39,7 +39,7 @@ class NumberStrategy implements TokenStrategyInterface
                     # Decimal numbers.
                     (?:[0-9]*\.[0-9]*)
                 )
-                (?:[eE]{0,1}[-+]?\d*)?
+                (?:[eE]?[-+]?\d*)?
             )
         )$
     /xD
@@ -67,7 +67,7 @@ class NumberStrategy implements TokenStrategyInterface
             (?<decimal_literal>
                 (?&nonzero_digit) (?&digit)*
             )
-            
+
             (?<octal_literal>
                 0 (?&octal_digit)*
             )
@@ -82,9 +82,9 @@ class NumberStrategy implements TokenStrategyInterface
 
             (?<integer_literal>
                 (?&decimal_literal)
-                | (?&octal_literal)
                 | (?&hexadecimal_literal)
                 | (?&binary_literal)
+                | (?&octal_literal)
             )
             
             (?<floating_literal>

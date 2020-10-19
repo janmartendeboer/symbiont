@@ -24,7 +24,16 @@ class LiteralNode extends AbstractNode implements LiteralNodeInterface
     public function __construct(TokenInterface $token)
     {
         $this->token = $token;
-        $this->arity = static::ARITY_LITERAL;
+    }
+
+    /**
+     * Create the arity that matches the current node type.
+     *
+     * @return Arity
+     */
+    protected function createArity(): Arity
+    {
+        return Arity::literal();
     }
 
     /**

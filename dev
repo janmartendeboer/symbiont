@@ -1,0 +1,22 @@
+#!/usr/bin/bash
+
+project=$(readlink -f "$(dirname "$0")")
+
+set -e;
+
+COMMANDS=(
+  'set -e'
+  'composer install --quiet'
+  'cd /app'
+  "VERBOSE=${VERBOSE} /usr/local/lib/symbiont/bin/symbiont $*"
+)
+
+IFS=';'
+docker run \
+  --rm \
+  -v "$PWD":/app:ro \
+  -v "$project":/usr/local/lib/symbiont \
+  -w /usr/local/lib/symbiont \
+  --entrypoint bash \
+  srcoder/development-php:php74-fpm \
+  -c "${COMMANDS[*]}"

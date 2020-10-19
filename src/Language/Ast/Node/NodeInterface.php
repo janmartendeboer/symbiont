@@ -18,18 +18,9 @@ interface NodeInterface extends JsonSerializable
     /**
      * Get the arity of the current node.
      *
-     * - unary
-     * - binary
-     * - ternary
-     * - literal
-     * - this
-     * - function
-     * - statement
-     * - name
-     *
-     * @return string
+     * @return Arity
      */
-    public function getArity(): string;
+    public function getArity(): Arity;
 
     /**
      * Get the token for the current node.

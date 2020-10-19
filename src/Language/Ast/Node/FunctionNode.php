@@ -28,6 +28,6 @@ class FunctionNode extends AbstractBinaryNode
         $this->token  = $token;
         $this->first  = $argumentList;
         $this->second = $body;
-        $this->arity  = static::ARITY_FUNCTION;
+        $this->arity  = Arity::function();
     }
 }

@@ -13,10 +13,18 @@ namespace Symbiont\Language\Ast\Node;
 abstract class AbstractUnaryNode extends AbstractNode implements
     UnaryNodeInterface
 {
-    protected string $arity = self::ARITY_UNARY;
-
     /** @var mixed */
     protected $first;
+
+    /**
+     * Create the arity that matches the current node type.
+     *
+     * @return Arity
+     */
+    protected function createArity(): Arity
+    {
+        return Arity::unary();
+    }
 
     /**
      * Get the first sub-node.
