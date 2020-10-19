@@ -12,6 +12,7 @@ RUN apk add --update --no-cache icu-dev \
 WORKDIR /usr/local/lib/symbiont
 
 COPY bin bin/
+COPY lang lang/
 COPY src src/
 COPY composer.json .
 
