@@ -3,4 +3,5 @@ _config.yml
 dev
 README.md
 vendor/
+composer.lock
 tests/
