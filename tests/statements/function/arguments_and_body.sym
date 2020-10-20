@@ -1,0 +1,4 @@
+function ($foo, $bar : 1) {
+    $baz : $foo : $bar;
+    $qux : 12;
+};
