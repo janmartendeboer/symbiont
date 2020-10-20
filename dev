@@ -6,7 +6,7 @@ set -e;
 
 COMMANDS=(
   'set -e'
-  'composer update --quiet'
+  '(composer install --quiet || composer update --quiet)'
   'cd /app'
   "/usr/local/lib/symbiont/bin/symbiont $*"
 )
