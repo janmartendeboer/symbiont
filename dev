@@ -18,8 +18,8 @@ docker run \
   -v "$PWD":/app:ro \
   -v "$project":/usr/local/lib/symbiont \
   -w /usr/local/lib/symbiont \
-  -e "VERBOSE=${VERBOSE}" \
-  -e "SYMBIONT_MODE=${MODE}" \
+  -e "SYMBIONT_VERBOSE=${SYMBIONT_VERBOSE:-${VERBOSE}}" \
+  -e "SYMBIONT_MODE=${SYMBIONT_MODE:-${MODE}}" \
   --entrypoint bash \
   srcoder/development-php:php74-fpm \
   -c "${COMMANDS[*]}"

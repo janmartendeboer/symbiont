@@ -29,7 +29,7 @@ $mode = getenv('SYMBIONT_MODE') ?: 'parse';
 $file = new SplFileObject($argv[1], 'r');
 
 $exceptionFormatter = function (Throwable $exception): void {
-    if (getenv('VERBOSE')) {
+    if (getenv('SYMBIONT_VERBOSE')) {
         fwrite(
                 STDERR,
             get_class($exception) . ':' . PHP_EOL
