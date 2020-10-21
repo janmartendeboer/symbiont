@@ -10,13 +10,34 @@
 
 use Symbiont\Language\Tokenizer\TokenStream;
 
-return function (TokenStream $tokens): void
+$verbose = (bool)getenv('SYMBIONT_VERBOSE');
+
+return function (TokenStream $tokens) use($verbose): void
 {
+    $result = '';
+
     foreach ($tokens as $token) {
-        echo sprintf(
+        $entry = sprintf(
             "%s\t\t%s",
             $token->getName(),
             var_export($token->getValue(), true)
-        ) . PHP_EOL;
+        );
+
+        if ($verbose) {
+            $context = $token->getContext();
+            $entry = sprintf(
+                "%s\t%d:%d\t%d:%d\t\t%s",
+                $context->getFile()->getPathname(),
+                $context->getStart()->getLine(),
+                $context->getStart()->getColumn(),
+                $context->getEnd()->getLine(),
+                $context->getEnd()->getColumn(),
+                $entry
+            );
+        }
+
+        $result .= $entry . PHP_EOL;
     }
+
+    fwrite(STDOUT, $result);
 };

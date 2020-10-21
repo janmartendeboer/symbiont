@@ -88,11 +88,11 @@ The following environment variables influence the execution of Symbiont.
 
 For each `SYMBIONT_MODE`, the following is the result:
 
-| Mode       | Output |
-|:-----------|:-------|
-| `tokenize` | Tokens, line by line, with their value. |
-| `parse`    | AST as a JSON object. |
-| `graph`    | AST as a Graphviz digraph. |
+| Mode       | Output                                  | Combined with `SYMBIONT_VERBOSE` |
+|:-----------|:----------------------------------------|:---------------------------------|
+| `tokenize` | Tokens, line by line, with their value. | The file path, start of the token and end of the token are prefixed to each line. |
+| `parse`    | AST as a JSON object.                   | No additional effects. |
+| `graph`    | AST as a Graphviz digraph.              | No additional effects. |
 
 ## Local PHP installation
 
@@ -140,3 +140,29 @@ the platform requirements installed.
 ```
 ./dev tests/types/numbers.sym
 ```
+
+### Environment variable aliases
+
+The `dev` script listens both to the documented environment variables, and a
+version without the `SYMBIONT_` prefix. E.g.:
+
+```
+MODE=tokenize ./dev tests/types/numbers.sym
+```
+
+Has the same effect as:
+
+```
+SYMBIONT_MODE=tokenize ./dev tests/types/numbers.sym
+```
+
+If a pre-existing environment variable conflicts, use the version with prefix.
+Prefixed versions supersede the non-prefixed versions.
+
+E.g.:
+
+```
+MODE=tokenize SYMBIONT_MODE=parse ./dev tests/types/numbers.sym
+```
+
+In the above case, the used mode will be `parse`.
