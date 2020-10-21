@@ -42,12 +42,12 @@ $exceptionFormatter = function (Throwable $exception): void {
 
 try {
     /** @noinspection PhpIncludeInspection */
-    $runner = require __DIR__ . '/modes/' . basename($mode) . '.php';
+    $consumer = require __DIR__ . '/consumer/' . basename($mode) . '.php';
 
     /** @noinspection PhpIncludeInspection */
-    $processor = require __DIR__ . '/modes/' . basename($mode) . '_output.php';
+    $exporter = require __DIR__ . '/exporter/' . basename($mode) . '.php';
 
-    $processor($runner($file));
+    $exporter($consumer($file));
 } catch (ContextAwareExceptionInterface $exception) {
     $exceptionFormatter($exception);
 
