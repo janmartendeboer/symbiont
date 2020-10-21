@@ -75,6 +75,25 @@ syntax. The following code should work exactly the same:
 Currently, Symbiont can be run on a local installation of PHP >= PHP 7.4, or
 alternatively inside a Docker container.
 
+## Environment variables
+
+The following environment variables influence the execution of Symbiont.
+
+| Variable           | Possible values              | Description |
+|:-------------------|:----------------------------:|:------------|
+| `SYMBIONT_VERBOSE` | Any non-zero length string.  | Shows the PHP stack trace on top of the Symbiont exception output. |
+| `SYMBIONT_MODE`    | `tokenize`, `parse`, `graph` | Defaults to `parse`. Interprets the program up until the matching step and outputs the result. |
+
+## Symbiont modes
+
+For each `SYMBIONT_MODE`, the following is the result:
+
+| Mode       | Output |
+|:-----------|:-------|
+| `tokenize` | Tokens, line by line, with their value. |
+| `parse`    | AST as a JSON object. |
+| `graph`    | AST as a Graphviz digraph. |
+
 ## Local PHP installation
 
 When PHP is installed locally, run your script as follows:
