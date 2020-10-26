@@ -113,10 +113,10 @@ class Parser implements ParserInterface
         while ($symbol !== null
             && $bindingPower < $symbol->getBindingPower()
         ) {
-            $token   = $context->advance();
+            $context->advance();
             $left    = $symbol->led($context, $subject, $left);
-            $symbol  = $this->symbols->getSymbol($token);
-            $subject = $token;
+            $subject = $context->current();
+            $symbol  = $this->symbols->getSymbol($subject);
         }
 
         return $left;
