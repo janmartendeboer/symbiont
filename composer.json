@@ -18,6 +18,9 @@
         "ext-pcre": "*",
         "lib-pcre": "*"
     },
+    "require-dev": {
+        "phpunit/phpunit": "^9.4"
+    },
     "bin": [
         "bin/symbiont"
     ],
@@ -26,9 +29,15 @@
             "Symbiont\\": "src"
         }
     },
+    "autoload-dev": {
+        "psr-4": {
+            "Symbiont\\Test\\": "tests"
+        }
+    },
     "archive": {
         "exclude": [
             "/dev",
+            "/test",
             "/.dockerignore",
             "/.gitignore",
             "/tests",
