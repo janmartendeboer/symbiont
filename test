@@ -1,0 +1,21 @@
+#!/usr/bin/bash
+
+project=$(readlink -f "$(dirname "$0")")
+
+set -e;
+
+COMMANDS=(
+  'set -e'
+  '(composer install --quiet || composer update --quiet)'
+  "/app/vendor/bin/phpunit ${*:-.}"
+)
+
+IFS=';'
+docker run \
+  --rm \
+  -u "$(id -u "$USER"):$(id -g "$USER")" \
+  -v "$project":/app \
+  -w /app \
+  --entrypoint bash \
+  srcoder/development-php:php74-fpm \
+  -c "${COMMANDS[*]}"
