@@ -10,13 +10,17 @@ jobs:
   phpunit:
     strategy:
       matrix:
+        runner:
+          - ubuntu-20.04
+          - windows-2019
+          - macos-10.15
         php:
           - 7.4
           - 8.0
         composer:
           - 1
           - 2
-    runs-on: ubuntu-20.04
+    runs-on: ${{ matrix.runner }}
     name: PHPUnit @ PHP ${{ matrix.php }}, Composer ${{ matrix.composer }}
     steps:
       - name: Checkout repository
