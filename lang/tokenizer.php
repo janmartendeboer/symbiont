@@ -18,25 +18,19 @@ use Symbiont\Language\Tokenizer\Strategy\SymbolStrategy;
 use Symbiont\Language\Tokenizer\Strategy\VariableStrategy;
 use Symbiont\Language\Tokenizer\Strategy\WhitespaceStrategy;
 
-$tokenizer = new StatelessTokenizer(
-    new TokenFinder(
-        new WhitespaceStrategy(),
-        new CommentStrategy(),
-        new VariableStrategy(),
-        new NumberStrategy(),
-        new SymbolStrategy(
-            SymbolTable::getInstance(__DIR__ . '/symbol/*/*.php')
-        )
+return new TokenOptimizer(
+    new StatelessTokenizer(
+        new TokenFinder(
+            new WhitespaceStrategy(),
+            new CommentStrategy(),
+            new VariableStrategy(),
+            new NumberStrategy(),
+            new SymbolStrategy(
+                SymbolTable::getInstance(__DIR__ . '/symbol/*/*.php')
+            )
+        ),
+        'T_END_PROGRAM'
     ),
-    'T_END_PROGRAM'
-);
-
-$optimizer = new TokenOptimizer(
     WhitespaceStrategy::TOKEN_NAME,
     CommentStrategy::TOKEN_NAME
 );
-
-return function (SplFileInfo $file) use ($tokenizer, $optimizer): Generator
-{
-    return $optimizer($tokenizer($file));
-};

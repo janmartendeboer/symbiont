@@ -11,39 +11,56 @@
 namespace Symbiont\Language\Tokenizer\Optimizer;
 
 use Generator;
+use SplFileInfo;
 use Symbiont\Language\Tokenizer\TokenInterface;
+use Symbiont\Language\Tokenizer\TokenizerInterface;
+use Symbiont\Language\Tokenizer\TokenStream;
+use Symbiont\Language\Tokenizer\TokenStreamInterface;
+use Symbiont\Language\Tokenizer\UnexpectedTokenSequenceException;
 
-class TokenOptimizer implements TokenOptimizerInterface
+class TokenOptimizer implements TokenizerInterface
 {
     private array $blacklist;
+
+    private TokenizerInterface $tokenizer;
 
     /**
      * Constructor.
      *
-     * @param string ...$blacklist
+     * @param TokenizerInterface $tokenizer
+     * @param string             ...$blacklist
      */
-    public function __construct(string ...$blacklist)
-    {
+    public function __construct(
+        TokenizerInterface $tokenizer,
+        string ...$blacklist
+    ) {
+        $this->tokenizer = $tokenizer;
         $this->blacklist = $blacklist;
     }
 
     /**
-     * Optimize the given tokens, yielding only the tokens that are necessary.
+     * Tokenize the given file into a list of tokens.
      *
-     * @param iterable|TokenInterface[] $tokens
+     * @param SplFileInfo $file
      *
-     * @return Generator|TokenInterface[]
+     * @return TokenStreamInterface
+     *
+     * @throws UnexpectedTokenSequenceException When a token could not be resolved.
      */
-    public function __invoke(iterable $tokens): Generator
+    public function __invoke(SplFileInfo $file): TokenStreamInterface
     {
-        foreach ($tokens as $token) {
-            if (!$token instanceof TokenInterface
-                || in_array($token->getName(), $this->blacklist, true)
-            ) {
-                continue;
-            }
+        return new TokenStream(
+            (function () use ($file): Generator {
+                foreach ($this->tokenizer->__invoke($file) as $token) {
+                    if (!$token instanceof TokenInterface
+                        || in_array($token->getName(), $this->blacklist, true)
+                    ) {
+                        continue;
+                    }
 
-            yield $token;
-        }
+                    yield $token;
+                }
+            })()
+        );
     }
 }

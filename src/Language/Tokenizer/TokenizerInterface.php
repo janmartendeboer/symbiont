@@ -20,9 +20,9 @@ interface TokenizerInterface
      *
      * @param SplFileInfo $file
      *
-     * @return Generator|TokenInterface[]
+     * @return TokenStreamInterface
      *
      * @throws UnexpectedTokenSequenceException When a token could not be resolved.
      */
-    public function __invoke(SplFileInfo $file): Generator;
+    public function __invoke(SplFileInfo $file): TokenStreamInterface;
 }

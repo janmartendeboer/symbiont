@@ -10,27 +10,8 @@
 
 namespace Symbiont\Language\Tokenizer;
 
-interface TokenStreamInterface
-{
-    /**
-     * Produce the next token, ensuring the current token matches the requested
-     * token identifier.
-     *
-     * When the requested token identifier is null, any token may be produced.
-     *
-     * @param string|null $token
-     *
-     * @return TokenInterface|null
-     *
-     * @throws UnexpectedTokenException When the produced token does not match.
-     * @throws UnexpectedEndOfStreamException When the token stream has ended.
-     */
-    public function advance(string $token = null): ?TokenInterface;
+use Iterator;
 
-    /**
-     * Get the current token, if the token stream has started.
-     *
-     * @return TokenInterface|null
-     */
-    public function current(): ?TokenInterface;
+interface TokenStreamInterface extends TokenPointerInterface, Iterator
+{
 }

@@ -42,14 +42,35 @@ class StatelessTokenizer implements TokenizerInterface
      *
      * @param SplFileInfo $file
      *
-     * @return Generator|TokenInterface[]
+     * @return TokenStreamInterface
      *
      * @throws UnexpectedTokenSequenceException When a token could not be resolved.
      */
-    public function __invoke(SplFileInfo $file): Generator
+    public function __invoke(SplFileInfo $file): TokenStreamInterface
     {
-        $numTokens = 0;
+        return new TokenStream(
+            static::createTokenGenerator(
+                $file,
+                $this->finder,
+                $this->endToken
+            )
+        );
+    }
 
+    /**
+     * Create a token generator for the given file, characters,
+     *
+     * @param SplFileInfo $file
+     * @param TokenFinderInterface $finder
+     * @param string|null $endToken
+     *
+     * @return Generator
+     */
+    private static function createTokenGenerator(
+        SplFileInfo $file,
+        TokenFinderInterface $finder,
+        ?string $endToken
+    ): Generator {
         $characters = new CodePointIterator($file);
         $characters->rewind();
 
@@ -58,7 +79,7 @@ class StatelessTokenizer implements TokenizerInterface
             $start = new ImmutableCursor($characters);
 
             try {
-                $token = $this->finder->__invoke($characters);
+                $token = $finder->__invoke($characters);
             } catch (UnexpectedTokenSequenceException $exception) {
                 throw new UnexpectedTokenSequenceException(
                     $exception->getSequence(),
@@ -79,22 +100,15 @@ class StatelessTokenizer implements TokenizerInterface
                     new ImmutableCursor($characters)
                 )
             );
-
-            $numTokens++;
         }
 
-        if ($this->endToken !== null) {
-            yield (
-                new Token($this->endToken)
-            )->withContext(
+        if ($endToken !== null) {
+            yield (new Token($endToken))->withContext(
                 new TokenContext(
                     $file,
                     new ImmutableCursor($characters)
                 )
             );
-            $numTokens++;
         }
-
-        return $numTokens;
     }
 }

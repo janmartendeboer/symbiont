@@ -16,7 +16,7 @@ use SplFileInfo;
 use SplFileObject;
 use Symbiont\Language\Tokenizer\Cursor\CursorInterface;
 
-class CodePointIterator implements Iterator, CursorInterface
+class CodePointIterator implements CursorInterface, Iterator
 {
     private SplFileInfo $file;
 
