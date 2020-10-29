@@ -17,7 +17,7 @@ jobs:
           - 1
           - 2
     runs-on: ubuntu-20.04
-    name: PHPUnit @ ${{ matrix.php }} using Composer V${{ matrix.composer }}
+    name: PHPUnit @ PHP ${{ matrix.php }} using Composer V${{ matrix.composer }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
