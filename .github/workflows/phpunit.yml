@@ -1,0 +1,32 @@
+name: PHPUnit
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  phpunit:
+    strategy:
+      matrix:
+        tag:
+          - php74-fpm
+          - php80-fpm
+    runs-on: ubuntu-20.04
+    name: PHPUnit @ ${{ matrix.tag }}
+    steps:
+      - uses: actions/checkout@v2
+      - name: Run unit tests
+        uses: docker://srcoder/development-php:${{ matrix.tag }}
+        with:
+          entrypoint: bash
+          args:
+            - -c
+            - |
+              set -e;
+              composer install;
+              vendor/bin/phpunit \
+                --no-configuration \
+                --bootstrap vendor/autoload.php \
+                tests
