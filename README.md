@@ -187,10 +187,3 @@ Whereas the following specifically runs the unit test for the `Token` class:
 ```
 ./test tests/Language/Tokenizer/TokenTest.php
 ```
-
-### Code coverage
-
-An HTML code coverage report is automatically generated within the `coverage/`
-directory.
-
-Open `coverage/index.html` within your browser of choice to verify code coverage.
