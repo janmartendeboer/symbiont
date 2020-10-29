@@ -31,7 +31,8 @@
             "/dev",
             "/.dockerignore",
             "/.gitignore",
-            "/tests"
+            "/tests",
+            "/examples"
         ]
     }
 }
