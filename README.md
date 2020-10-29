@@ -125,7 +125,7 @@ docker build -t symbiont:latest .
 Then, to run a local symbiont script:
 
 ```
-docker run --rm -v $PWD:/app symbiont:latest tests/types/numbers.sym
+docker run --rm -v $PWD:/app symbiont:latest examples/types/numbers.sym
 ```
 
 ## Development
@@ -147,13 +147,13 @@ The `dev` script listens both to the documented environment variables, and a
 version without the `SYMBIONT_` prefix. E.g.:
 
 ```
-MODE=tokenize ./dev tests/types/numbers.sym
+MODE=tokenize ./dev examples/types/numbers.sym
 ```
 
 Has the same effect as:
 
 ```
-SYMBIONT_MODE=tokenize ./dev tests/types/numbers.sym
+SYMBIONT_MODE=tokenize ./dev examples/types/numbers.sym
 ```
 
 If a pre-existing environment variable conflicts, use the version with prefix.
@@ -162,7 +162,35 @@ Prefixed versions supersede the non-prefixed versions.
 E.g.:
 
 ```
-MODE=tokenize SYMBIONT_MODE=parse ./dev tests/types/numbers.sym
+MODE=tokenize SYMBIONT_MODE=parse ./dev examples/types/numbers.sym
 ```
 
 In the above case, the used mode will be `parse`.
+
+## Testing
+
+To run unit tests against the library files, the `./test` script can be used to
+perform PHPUnit testing on the test files.
+
+```
+./test [path/to/test]
+```
+
+The following will run all unit tests:
+
+```
+./test
+```
+
+Whereas the following specifically runs the unit test for the `Token` class:
+
+```
+./test tests/Language/Tokenizer/TokenTest.php
+```
+
+### Code coverage
+
+An HTML code coverage report is automatically generated within the `coverage/`
+directory.
+
+Open `coverage/index.html` within your browser of choice to verify code coverage.
