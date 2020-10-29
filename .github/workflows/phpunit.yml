@@ -10,23 +10,17 @@ jobs:
   phpunit:
     strategy:
       matrix:
-        tag:
-          - php74-fpm
-          - php80-fpm
+        php:
+          - 7.4
     runs-on: ubuntu-20.04
-    name: PHPUnit @ ${{ matrix.tag }}
+    name: PHPUnit @ ${{ matrix.php }}
     steps:
-      - uses: actions/checkout@v2
-      - name: Run unit tests
-        uses: docker://srcoder/development-php:${{ matrix.tag }}
+      - uses: shivammathur/setup-php@v2
         with:
-          entrypoint: bash
-          args:
-            - -c
-            - |
-              set -e;
-              composer install;
-              vendor/bin/phpunit \
-                --no-configuration \
-                --bootstrap vendor/autoload.php \
-                tests
+          php-version: ${{ matrix.php }}
+          extensions: intl, json, pcre
+      - uses: actions/checkout@v2
+      - uses: php-actions/composer@v1
+      - uses: php-actions/phpunit@v9
+        with:
+          bootstrap: vendor/autoload.php
