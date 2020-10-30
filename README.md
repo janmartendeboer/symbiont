@@ -141,6 +141,22 @@ the platform requirements installed.
 ./dev tests/types/numbers.sym
 ```
 
+### Watching Symbiont files
+
+Within the project, a file watcher is configured for the `fileExtension` called
+`Symbiont`. It uses the `dev` command to verify changes in `*.sym` files.
+
+In order for the watcher to work, a file type `Symbiont` with file name pattern
+`*.sym` has to be created.
+
+> Follow
+[this guide](https://www.jetbrains.com/help/phpstorm/creating-and-registering-file-types.html)
+to create new file type associations within PhpStorm.
+
+Once the watcher works, it checks if it can parse the current file on change. If
+the parser works as expected, nothing happens. When an error occurs, the console
+opens with the error output of the parser.
+
 ### Environment variable aliases
 
 The `dev` script listens both to the documented environment variables, and a
@@ -172,5 +188,5 @@ In the above case, the used mode will be `parse`.
 To run unit tests against the library files, use the Symbiont configured
 `phpunit.xml.dist` run configuration within PhpStorm.
 
-If Composer packages are out of date, first run the `composer update --dev`
+> If Composer packages are out of date, first run the `composer update --dev`
 run configuration within PhpStorm.

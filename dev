@@ -4,6 +4,14 @@ project=$(readlink -f "$(dirname "$0")")
 
 set -e;
 
+: "${SYMBIONT_MODE:=${MODE}}"
+
+# Allow the Symbiont mode to be passed as first argument.
+if [[ "${SYMBIONT_MODE}" == "" ]] && [ -f "$project/bin/consumer/$1.php" ]; then
+  SYMBIONT_MODE="$1"
+  shift;
+fi
+
 COMMANDS=(
   'set -e'
   '(composer install --quiet || composer update --quiet)'
@@ -19,7 +27,7 @@ docker run \
   -v "$project":/usr/local/lib/symbiont \
   -w /usr/local/lib/symbiont \
   -e "SYMBIONT_VERBOSE=${SYMBIONT_VERBOSE:-${VERBOSE}}" \
-  -e "SYMBIONT_MODE=${SYMBIONT_MODE:-${MODE}}" \
+  -e "SYMBIONT_MODE=${SYMBIONT_MODE}" \
   --entrypoint bash \
   srcoder/development-php:php74-fpm \
   -c "${COMMANDS[*]}"
