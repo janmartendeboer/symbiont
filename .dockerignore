@@ -3,7 +3,6 @@
 _config.yml
 dev
 README.md
-coverage/
 vendor/
 composer.lock
 phpunit.xml.dist
