@@ -1,6 +1,10 @@
-/.idea
-!/.idea/fileTemplates
-!/.idea/codeStyles
+# Explicitly allow .idea folder, if ignored globally.
+!/.idea
+
+# The workspace contains too much changing values.
+# If configuration is stored within the workspace file, extract it to a specific
+# XML file instead.
+/.idea/workspace.xml
 
 /vendor/
 /composer.lock

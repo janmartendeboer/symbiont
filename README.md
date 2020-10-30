@@ -169,21 +169,8 @@ In the above case, the used mode will be `parse`.
 
 ## Testing
 
-To run unit tests against the library files, the `./test` script can be used to
-perform PHPUnit testing on the test files.
+To run unit tests against the library files, use the Symbiont configured
+`phpunit.xml.dist` run configuration within PhpStorm.
 
-```
-./test [path/to/test]
-```
-
-The following will run all unit tests:
-
-```
-./test
-```
-
-Whereas the following specifically runs the unit test for the `Token` class:
-
-```
-./test tests/Language/Tokenizer/TokenTest.php
-```
+If Composer packages are out of date, first run the `composer update --dev`
+run configuration within PhpStorm.
