@@ -7,5 +7,10 @@
 /.idea/workspace.xml
 
 /vendor/
+<<<<<<< HEAD
 /composer.lock
 /phpunit.xml
+=======
+composer.lock
+phpunit.xml
+>>>>>>> ca1a2e60a2933b9639a8eae8524eb5b9d755f73e
