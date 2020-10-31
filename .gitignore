@@ -13,4 +13,5 @@
 # Local code quality configuration.
 /phpcs.xml
 /phpmd.xml
+/phpstan.neon
 /phpunit.xml

@@ -59,6 +59,7 @@
       <path value="$PROJECT_DIR$/vendor/psr/log" />
       <path value="$PROJECT_DIR$/vendor/symfony/polyfill-php80" />
       <path value="$PROJECT_DIR$/vendor/pdepend/pdepend" />
+      <path value="$PROJECT_DIR$/vendor/phpstan/phpstan" />
     </include_path>
   </component>
   <component name="PhpInterpreters">
@@ -138,6 +139,11 @@
     </phpInfoCache>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="7.4" />
+  <component name="PhpStan">
+    <PhpStan_settings>
+      <phpcs_fixer_by_interpreter interpreter_id="6c1e0094-bf16-40c1-a632-c15b44624ff1" tool_path="/opt/project/vendor/bin/phpstan" />
+    </PhpStan_settings>
+  </component>
   <component name="PhpUnit">
     <phpunit_settings>
       <phpunit_by_interpreter interpreter_id="6c1e0094-bf16-40c1-a632-c15b44624ff1" configuration_file_path="/opt/project/phpunit.xml.dist" custom_loader_path="/opt/project/vendor/autoload.php" phpunit_phar_path="" use_configuration_file="true" />

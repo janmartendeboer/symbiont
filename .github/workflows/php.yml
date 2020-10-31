@@ -17,6 +17,7 @@ jobs:
         command:
           - phpcs
           - phpmd src,tests,lang ansi phpmd.xml.dist
+          - phpstan analyse
 
     steps:
       - name: Checkout repository
@@ -33,7 +34,6 @@ jobs:
         run: composer update
 
       - run: vendor/bin/${{ matrix.command }}
-
 
   phpunit:
     needs: [php]
