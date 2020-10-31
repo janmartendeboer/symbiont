@@ -12,4 +12,5 @@
 
 # Local code quality configuration.
 /phpcs.xml
+/phpmd.xml
 /phpunit.xml
