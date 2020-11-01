@@ -42,7 +42,7 @@ class TokenTest extends TestCase
      */
     public function testConstructor(string $name, ?string $value): void
     {
-        $this->assertInstanceOf(Token::class, new Token($name, $value));
+        static::assertInstanceOf(Token::class, new Token($name, $value));
     }
 
     /**
@@ -60,7 +60,7 @@ class TokenTest extends TestCase
     {
         $subject = new Token($name, $value);
 
-        $this->assertEquals(
+        static::assertEquals(
             [
                 'name' => $name,
                 'value' => $value
@@ -69,19 +69,19 @@ class TokenTest extends TestCase
             'A JSON serialized Token must expose its name and value.'
         );
 
-        $this->assertEquals(
+        static::assertEquals(
             $name,
             $subject->getName(),
             'Name must be unchanged from input value.'
         );
 
-        $this->assertEquals(
+        static::assertEquals(
             $value,
             $subject->getValue(),
             'Value must be unchanged from input value.'
         );
 
-        $this->assertEquals(
+        static::assertEquals(
             $name,
             $subject->__toString(),
             'String representation of Token must equal Token name.'
@@ -96,7 +96,7 @@ class TokenTest extends TestCase
     {
         $subject = new Token('T_TEST');
 
-        $this->assertNull(
+        static::assertNull(
             $subject->getContext(),
             'A Token has no context on construction.'
         );
@@ -104,13 +104,13 @@ class TokenTest extends TestCase
         $context     = $this->createMock(TokenContextInterface::class);
         $withContext = $subject->withContext($context);
 
-        $this->assertNotSame(
+        static::assertNotSame(
             $subject,
             $withContext,
             'A Token with context must result in a new Token.'
         );
 
-        $this->assertSame(
+        static::assertSame(
             $context,
             $withContext->getContext(),
             'A Token with a context must return the same context.'
