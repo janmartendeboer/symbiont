@@ -20,6 +20,8 @@ class FunctionNode extends AbstractBinaryNode
      * @param TokenInterface         $token
      * @param iterable               $argumentList
      * @param StatementListInterface $body
+     *
+     * @SuppressWarnings(PHPMD.StaticAccess)
      */
     public function __construct(
         TokenInterface $token,

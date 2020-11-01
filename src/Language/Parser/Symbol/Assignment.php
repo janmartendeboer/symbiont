@@ -74,6 +74,7 @@ class Assignment implements SymbolInterface
      * @param NodeInterface         $left
      *
      * @return NodeInterface
+     * @SuppressWarnings(PHPMD.StaticAccess)
      */
     public function led(
         ParseContextInterface $context,

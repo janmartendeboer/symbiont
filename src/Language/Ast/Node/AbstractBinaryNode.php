@@ -21,6 +21,7 @@ abstract class AbstractBinaryNode extends AbstractUnaryNode implements
      * Create the arity that matches the current node type.
      *
      * @return Arity
+     * @SuppressWarnings(PHPMD.StaticAccess)
      */
     protected function createArity(): Arity
     {

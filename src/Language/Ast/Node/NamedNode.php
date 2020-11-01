@@ -27,6 +27,7 @@ class NamedNode extends AbstractNode implements LiteralNodeInterface
      * Create the arity that matches the current node type.
      *
      * @return Arity
+     * @SuppressWarnings(PHPMD.StaticAccess)
      */
     protected function createArity(): Arity
     {
