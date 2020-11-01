@@ -48,7 +48,11 @@ class TokenStream extends IteratorIterator implements TokenStreamInterface
 
         $current = $this->current();
 
-        if ($token !== null && $current->getName() !== $token) {
+        if (
+            $token !== null
+            && $current !== null
+            && $current->getName() !== $token
+        ) {
             throw new UnexpectedTokenException($token, $current);
         }
 
