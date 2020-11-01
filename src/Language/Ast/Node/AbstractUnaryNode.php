@@ -11,6 +11,8 @@
 
 namespace Symbiont\Language\Ast\Node;
 
+use Symbiont\Language\Ast\Node\Arity\Arity;
+
 abstract class AbstractUnaryNode extends AbstractNode implements
     UnaryNodeInterface
 {

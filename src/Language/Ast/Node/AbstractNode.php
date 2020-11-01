@@ -11,6 +11,8 @@
 
 namespace Symbiont\Language\Ast\Node;
 
+use Symbiont\Language\Ast\Node\Arity\Arity;
+
 abstract class AbstractNode implements NodeInterface
 {
     protected ?Arity $arity = null;

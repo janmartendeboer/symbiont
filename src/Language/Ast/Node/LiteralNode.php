@@ -11,6 +11,7 @@
 
 namespace Symbiont\Language\Ast\Node;
 
+use Symbiont\Language\Ast\Node\Arity\Arity;
 use Symbiont\Language\Tokenizer\TokenInterface;
 
 class LiteralNode extends AbstractNode implements LiteralNodeInterface

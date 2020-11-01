@@ -7,6 +7,7 @@
 
 namespace Symbiont\Language\Ast\Node;
 
+use Symbiont\Language\Ast\Node\Arity\Arity;
 use Symbiont\Language\Ast\Statement\StatementListInterface;
 use Symbiont\Language\Tokenizer\TokenInterface;
 

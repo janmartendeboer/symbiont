@@ -12,6 +12,7 @@
 namespace Symbiont\Language\Ast\Node;
 
 use JsonSerializable;
+use Symbiont\Language\Ast\Node\Arity\Arity;
 use Symbiont\Language\Tokenizer\TokenInterface;
 
 interface NodeInterface extends JsonSerializable

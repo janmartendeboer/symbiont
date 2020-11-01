@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Symbiont\Language\Ast\Node;
+namespace Symbiont\Language\Ast\Node\Arity;
 
 use JsonSerializable;
 
