@@ -22,6 +22,13 @@ return new Prefix(
         ParseContextInterface $context
     ) use ($argumentParser): NodeInterface {
         $token = $context->current();
+
+        if ($token === null) {
+            throw new DomainException(
+                'Expected T_FUNCTION, got null.'
+            );
+        }
+
         $context->advance('T_FUNCTION');
 
         // @todo support named functions.
