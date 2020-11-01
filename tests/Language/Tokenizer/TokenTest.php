@@ -21,7 +21,7 @@ use PHPUnit\Framework\TestCase;
 class TokenTest extends TestCase
 {
     /**
-     * @return array
+     * @return array<int, array<int, string|null>>
      */
     public function valueProvider(): array
     {
