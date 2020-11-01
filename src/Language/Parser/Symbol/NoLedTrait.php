@@ -29,6 +29,7 @@ trait NoLedTrait
      * @return NodeInterface
      *
      * @throws SyntaxException Always.
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function led(
         ParseContextInterface $context,

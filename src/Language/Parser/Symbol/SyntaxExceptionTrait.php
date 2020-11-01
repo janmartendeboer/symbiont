@@ -26,6 +26,7 @@ trait SyntaxExceptionTrait
      * @param NodeInterface|null $node
      *
      * @return SyntaxException
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function createException(
         TokenInterface $token,
