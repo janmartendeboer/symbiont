@@ -41,7 +41,7 @@ abstract class AbstractNode implements NodeInterface
     /**
      * Specify data which should be serialized to JSON.
      *
-     * @return array
+     * @return array<mixed, mixed>
      */
     public function jsonSerialize(): array
     {

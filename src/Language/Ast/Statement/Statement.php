@@ -39,7 +39,7 @@ class Statement extends IteratorIterator implements StatementInterface
     /**
      * Return a list of nodes within the current statement.
      *
-     * @return array
+     * @return array<mixed, mixed>
      */
     public function jsonSerialize(): array
     {

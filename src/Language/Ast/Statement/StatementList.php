@@ -38,7 +38,7 @@ class StatementList extends IteratorIterator implements StatementListInterface
     /**
      * Return a list of statements.
      *
-     * @return array
+     * @return array<mixed, mixed>
      */
     public function jsonSerialize(): array
     {

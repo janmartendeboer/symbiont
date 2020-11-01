@@ -56,7 +56,7 @@ interface TokenInterface extends JsonSerializable
     /**
      * Specify data which should be serialized to JSON.
      *
-     * @return array
+     * @return array<mixed, mixed>
      */
     public function jsonSerialize(): array;
 }
