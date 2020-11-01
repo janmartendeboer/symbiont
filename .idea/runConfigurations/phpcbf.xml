@@ -1,0 +1,22 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="phpcbf" type="docker-deploy" factoryName="docker-image" server-name="Docker">
+    <deployment type="docker-image">
+      <settings>
+        <option name="imageTag" value="srcoder/development-php:php74-fpm" />
+        <option name="command" value="" />
+        <option name="containerName" value="symbiont_phpcs" />
+        <option name="entrypoint" value="/opt/symbiont/vendor/bin/phpcbf" />
+        <option name="commandLineOptions" value="-u 1000:1000 -w /opt/symbiont" />
+        <option name="volumeBindings">
+          <list>
+            <DockerVolumeBindingImpl>
+              <option name="containerPath" value="/opt/symbiont" />
+              <option name="hostPath" value="$PROJECT_DIR$" />
+            </DockerVolumeBindingImpl>
+          </list>
+        </option>
+      </settings>
+    </deployment>
+    <method v="2" />
+  </configuration>
+</component>
