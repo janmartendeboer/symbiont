@@ -15,8 +15,8 @@ use Symbiont\Language\Ast\Node\NodeInterface;
 use Symbiont\Language\Ast\Statement\StatementInterface;
 use Symbiont\Language\Ast\Statement\StatementListInterface;
 use Symbiont\Language\Parser\Symbol\SymbolHolderInterface;
-use Symbiont\Language\Tokenizer\TokenPointerInterface;
 use Symbiont\Language\Tokenizer\TokenInterface;
+use Symbiont\Language\Tokenizer\TokenPointerInterface;
 use Symbiont\Language\Tokenizer\UnexpectedTokenException;
 
 interface ParseContextInterface extends

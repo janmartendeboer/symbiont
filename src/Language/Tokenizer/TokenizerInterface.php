@@ -11,7 +11,6 @@
 
 namespace Symbiont\Language\Tokenizer;
 
-use Generator;
 use SplFileInfo;
 
 interface TokenizerInterface

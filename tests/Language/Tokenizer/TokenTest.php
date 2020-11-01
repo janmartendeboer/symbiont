@@ -11,9 +11,9 @@
 
 namespace Symbiont\Test\Language\Tokenizer;
 
+use PHPUnit\Framework\TestCase;
 use Symbiont\Language\Tokenizer\Context\TokenContextInterface;
 use Symbiont\Language\Tokenizer\Token;
-use PHPUnit\Framework\TestCase;
 
 /**
  * @coversDefaultClass \Symbiont\Language\Tokenizer\Token

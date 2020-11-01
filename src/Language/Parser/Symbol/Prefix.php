@@ -8,7 +8,6 @@
 namespace Symbiont\Language\Parser\Symbol;
 
 use Closure;
-use DomainException;
 use Symbiont\Language\Ast\Node\NodeInterface;
 use Symbiont\Language\Ast\Node\OperatorNode;
 use Symbiont\Language\Parser\ParseContextInterface;

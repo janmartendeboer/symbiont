@@ -11,7 +11,6 @@
 
 namespace Symbiont\Language\Parser\Symbol;
 
-use Symbiont\Language\Ast\Node\Arity\Arity;
 use Symbiont\Language\Ast\Node\AssignmentNode;
 use Symbiont\Language\Ast\Node\LiteralNodeInterface;
 use Symbiont\Language\Ast\Node\NodeInterface;
