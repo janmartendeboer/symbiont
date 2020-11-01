@@ -53,6 +53,10 @@ class TokenContextFormatter implements TokenContextFormatterInterface
         $buffer->rewind();
 
         foreach ($buffer as $row => $text) {
+            if (!is_string($text)) {
+                continue;
+            }
+
             $lineNumber = $row + 1;
 
             // These lines are before the target context.

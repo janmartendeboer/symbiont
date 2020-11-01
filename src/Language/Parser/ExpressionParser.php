@@ -13,9 +13,9 @@ declare(strict_types=1);
 
 namespace Symbiont\Language\Parser;
 
-use DomainException;
 use OutOfRangeException;
 use Symbiont\Language\Ast\Node\NodeInterface;
+use Symbiont\Language\Tokenizer\UnexpectedEndOfStreamException;
 
 trait ExpressionParser
 {
@@ -29,7 +29,7 @@ trait ExpressionParser
      *
      * @throws OutOfRangeException When the left side of the expression contains
      *   no known symbol.
-     * @throws DomainException When the tokens stop mid expression.
+     * @throws UnexpectedEndOfStreamException When the tokens stop mid expression.
      */
     public function parseExpression(
         ParseContextInterface $context,
@@ -38,9 +38,7 @@ trait ExpressionParser
         $current = $context->getSymbol((string)$context->current());
 
         if ($current === null) {
-            throw new OutOfRangeException(
-                'No symbol found on left side of expression.'
-            );
+            throw new UnexpectedEndOfStreamException(null);
         }
 
         $left    = $current->nud($context);
@@ -52,7 +50,7 @@ trait ExpressionParser
             && $bindingPower < $symbol->getBindingPower()
         ) {
             if ($subject === null) {
-                throw new DomainException('Missing token.');
+                throw new UnexpectedEndOfStreamException(null);
             }
 
             $context->advance();

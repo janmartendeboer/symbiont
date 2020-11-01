@@ -13,6 +13,7 @@ namespace Symbiont\Language\Parser;
 
 use LogicException;
 use Symbiont\Language\Parser\Symbol\SymbolInterface;
+use Symbiont\Language\Tokenizer\Context\TokenContextInterface;
 use Symbiont\Language\Tokenizer\ContextAwareExceptionInterface;
 use Symbiont\Language\Tokenizer\ContextAwareExceptionTrait;
 use Symbiont\Language\Tokenizer\TokenInterface;
@@ -39,26 +40,43 @@ class SyntaxException extends LogicException implements
         int $code = 0,
         Throwable $previous = null
     ) {
-        $context = $token->getContext();
-        $cursor  = $context->getStart();
-
-        $this->context = $context;
+        $this->context = $token->getContext();
 
         parent::__construct(
             sprintf(
-                'Invalid %s(%s) encountered. %s - In %s on line %d column %d',
+                'Invalid %s(%s) encountered. %s - %s',
                 static::createSymbolName($symbol),
                 json_encode(
                     $token->getValue(),
                     JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES
                 ),
                 $message,
-                $context->getFile()->getPathname(),
-                $cursor->getLine(),
-                $cursor->getColumn()
+                static::createMessageContext($this->context)
             ),
             $code,
             $previous
+        );
+    }
+
+    /**
+     * Create the context information for the exception message, if provided.
+     *
+     * @param TokenContextInterface|null $context
+     *
+     * @return string
+     */
+    private static function createMessageContext(
+        ?TokenContextInterface $context
+    ): string {
+        return (
+            $context instanceof TokenContextInterface
+                ? sprintf(
+                    'In %s on line %d column %d',
+                    $context->getFile()->getPathname(),
+                    $context->getStart()->getLine(),
+                    $context->getStart()->getColumn()
+                )
+                : 'In unknown context'
         );
     }
 
@@ -76,6 +94,6 @@ class SyntaxException extends LogicException implements
             sprintf('/^%s/', addslashes(__NAMESPACE__ . '\\Symbol\\')),
             '',
             get_class($symbol)
-        );
+        ) ?? '';
     }
 }

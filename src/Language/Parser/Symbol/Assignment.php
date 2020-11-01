@@ -89,7 +89,7 @@ class Assignment implements SymbolInterface
         }
 
         return new AssignmentNode(
-            $this->getSequence(),
+            $this->getSequence() ?? '',
             $subject,
             $left,
             $context->parseExpression($this->getBindingPower() - 1)

@@ -37,7 +37,7 @@ trait SyntaxExceptionTrait
             $token,
             $this instanceof SymbolInterface
                 ? $this
-                : new Symbol($token->getValue()),
+                : new Symbol($token->getValue() ?? ''),
             $message
         );
     }

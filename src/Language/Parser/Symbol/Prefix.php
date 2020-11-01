@@ -8,9 +8,11 @@
 namespace Symbiont\Language\Parser\Symbol;
 
 use Closure;
+use DomainException;
 use Symbiont\Language\Ast\Node\NodeInterface;
 use Symbiont\Language\Ast\Node\OperatorNode;
 use Symbiont\Language\Parser\ParseContextInterface;
+use Symbiont\Language\Tokenizer\UnexpectedEndOfStreamException;
 
 class Prefix implements SymbolInterface
 {
@@ -44,13 +46,21 @@ class Prefix implements SymbolInterface
 
     /**
      * @return Closure
+     *
+     * @throws UnexpectedEndOfStreamException When there is no current token.
      */
     private function createNud(): Closure
     {
         return function (ParseContextInterface $context): NodeInterface {
+            $token = $context->current();
+
+            if ($token === null) {
+                throw new UnexpectedEndOfStreamException($this->getSequence());
+            }
+
             return new OperatorNode(
-                $this->getSequence(),
-                $context->current(),
+                $this->getSequence() ?? '',
+                $token,
                 $context->parseExpression($this->rightBindingPower)
             );
         };

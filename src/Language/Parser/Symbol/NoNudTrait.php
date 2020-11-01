@@ -15,6 +15,7 @@ use Symbiont\Language\Ast\Node\NodeInterface;
 use Symbiont\Language\Parser\ParseContextInterface;
 use Symbiont\Language\Parser\SyntaxException;
 use Symbiont\Language\Tokenizer\TokenInterface;
+use Symbiont\Language\Tokenizer\UnexpectedEndOfStreamException;
 
 // phpcs:disable Squiz.Commenting.FunctionComment.InvalidNoReturn
 trait NoNudTrait
@@ -27,12 +28,19 @@ trait NoNudTrait
      * @return NodeInterface
      *
      * @throws SyntaxException Always.
+     * @throws UnexpectedEndOfStreamException When there is no current token
      */
     public function nud(
         ParseContextInterface $context
     ): NodeInterface {
+        $token = $context->current();
+
+        if ($token === null) {
+            throw new UnexpectedEndOfStreamException(null);
+        }
+
         throw $this->createException(
-            $context->current(),
+            $token,
             'Cannot be used as null denoted operator.'
         );
     }

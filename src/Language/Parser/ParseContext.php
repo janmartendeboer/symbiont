@@ -63,7 +63,13 @@ class ParseContext implements ParseContextInterface
      */
     public function advance(string $token = null): TokenInterface
     {
-        return $this->tokens->advance($token);
+        $result = $this->tokens->advance($token);
+
+        if ($result === null) {
+            throw new UnexpectedEndOfStreamException($token);
+        }
+
+        return $result;
     }
 
     /**
@@ -78,6 +84,10 @@ class ParseContext implements ParseContextInterface
     public function current(string $token = null): ?TokenInterface
     {
         $current = $this->tokens->current();
+
+        if ($current === null) {
+            throw new UnexpectedEndOfStreamException($token);
+        }
 
         if ($token !== null && $current->getName() !== $token) {
             throw new UnexpectedTokenException($token, $current);

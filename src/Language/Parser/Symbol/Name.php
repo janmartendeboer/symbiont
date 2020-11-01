@@ -14,6 +14,7 @@ namespace Symbiont\Language\Parser\Symbol;
 use Symbiont\Language\Ast\Node\NamedNode;
 use Symbiont\Language\Ast\Node\NodeInterface;
 use Symbiont\Language\Parser\ParseContextInterface;
+use Symbiont\Language\Tokenizer\UnexpectedEndOfStreamException;
 
 class Name implements SymbolInterface
 {
@@ -38,10 +39,18 @@ class Name implements SymbolInterface
      * @param ParseContextInterface $context
      *
      * @return NodeInterface
+     *
+     * @throws UnexpectedEndOfStreamException When there is no current token.
      */
     public function nud(
         ParseContextInterface $context
     ): NodeInterface {
-        return new NamedNode($context->current());
+        $token = $context->current();
+
+        if ($token === null) {
+            throw new UnexpectedEndOfStreamException(null);
+        }
+
+        return new NamedNode($token);
     }
 }

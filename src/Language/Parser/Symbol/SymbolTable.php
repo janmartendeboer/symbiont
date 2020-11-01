@@ -67,14 +67,14 @@ class SymbolTable implements SymbolTableInterface
      *
      * @param string $pattern
      *
-     * @return $this
+     * @return self
      */
     public static function getInstance(string $pattern): self
     {
         if (!array_key_exists($pattern, static::$instances)) {
             static::$instances[$pattern] = new self();
 
-            foreach (glob($pattern) as $file) {
+            foreach (glob($pattern) ?: [] as $file) {
                 /** @noinspection PhpIncludeInspection */
                 $symbol = require $file;
 

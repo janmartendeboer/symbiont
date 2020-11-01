@@ -70,11 +70,14 @@ class CodePointIterator implements CursorInterface, Iterator
             // row.
             if (!$this->row->valid()) {
                 $this->row = null;
-                $this->rows->next();
+
+                if ($this->rows !== null) {
+                    $this->rows->next();
+                }
             }
         }
 
-        if ($this->row === null) {
+        if ($this->row === null && $this->rows !== null) {
             $this->row = $this->createRowIterator($this->rows);
         }
     }
@@ -94,7 +97,7 @@ class CodePointIterator implements CursorInterface, Iterator
 
         if ($rows->valid()) {
             $buffer = IntlBreakIterator::createCharacterInstance($this->locale);
-            $buffer->setText($this->rows->current());
+            $buffer->setText((string)$rows->current());
 
             /**
              * @var Iterator<int, string> $row
@@ -133,7 +136,10 @@ class CodePointIterator implements CursorInterface, Iterator
         return (
             $this->row !== null
             && $this->row->valid()
-        ) || $this->rows->valid();
+        ) || (
+            $this->rows !== null
+            && $this->rows->valid()
+        );
     }
 
     /**
@@ -164,7 +170,9 @@ class CodePointIterator implements CursorInterface, Iterator
      */
     public function getLine(): int
     {
-        return $this->rows->key() + 1;
+        return $this->rows instanceof Iterator
+            ? $this->rows->key() + 1
+            : 0;
     }
 
     /**
@@ -174,7 +182,9 @@ class CodePointIterator implements CursorInterface, Iterator
      */
     public function getColumn(): int
     {
-        $offset = $this->row->key();
+        $offset = $this->row instanceof Iterator
+            ? $this->row->key()
+            : null;
 
         return $offset === null ? 0 : $offset + 1;
     }
