@@ -69,10 +69,6 @@ class TokenFinder implements TokenFinderInterface
             $previous  = $strategies;
         }
 
-        if (count($previous) === 0) {
-            throw new UnexpectedTokenSequenceException($sequence);
-        }
-
         $sequence = substr($sequence, 0, -1);
         $token    = array_reduce(
             $previous,
@@ -80,15 +76,11 @@ class TokenFinder implements TokenFinderInterface
                 ?TokenInterface $carry,
                 TokenStrategyInterface $strategy
             ) use ($sequence): ?TokenInterface {
-                if ($carry === null) {
-                    try {
-                        $carry = $strategy($sequence);
-                    } catch (UnexpectedTokenSequenceException $exception) {
-                        $carry = null;
-                    }
+                try {
+                    return $carry ?? $strategy($sequence);
+                } catch (UnexpectedTokenSequenceException $exception) {
+                    return $carry;
                 }
-
-                return $carry;
             }
         );
 
