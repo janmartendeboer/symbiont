@@ -46,7 +46,7 @@ class LiteralNode extends AbstractNode implements LiteralNodeInterface
      */
     public function getValue(): string
     {
-        return $this->getToken()->getValue();
+        return $this->getToken()->getValue() ?? '';
     }
 
     /**
