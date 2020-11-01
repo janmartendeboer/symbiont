@@ -4,9 +4,18 @@ parameters:
 
   reportUnmatchedIgnoredErrors: true
   ignoreErrors:
+
+    # Allow $this to be provided by the caller of the lambda functions, within
+    # the language spec.
     - message: '#Variable \$this in PHPDoc tag \@var does not exist\.#'
       paths:
         - 'lang/*'
     - message: '#Undefined variable: \$this#'
       paths:
         - 'lang/*'
+
+    # Because PHPStan does not account for a fourth layer of abstraction concerning
+    # Iterator interfaces, the inspection fails, regardless of how the interface
+    # is configured to expose its knowledge of being a generic.
+    - message: '#Interface Symbiont\\Language\\Tokenizer\\TokenStreamInterface extends generic interface Iterator but does not specify its types: TKey, TValue#'
+      path: src/Language/Tokenizer/TokenStreamInterface.php
