@@ -19,6 +19,7 @@ use Symbiont\Language\Ast\Statement\StatementInterface;
 use Symbiont\Language\Ast\Statement\StatementList;
 use Symbiont\Language\Ast\Statement\StatementListInterface;
 use Symbiont\Language\Parser\Symbol\StatementSymbolInterface;
+use Symbiont\Language\Parser\Symbol\SymbolInterface;
 use Symbiont\Language\Parser\Symbol\SymbolTableInterface;
 use Symbiont\Language\Tokenizer\TokenStreamInterface;
 
@@ -134,25 +135,55 @@ class Parser implements ParserInterface
     public function parseStatement(
         ParseContextInterface $context
     ): StatementInterface {
-        $token  = $context->current();
-        $symbol = $this->symbols->getSymbol($token);
+        $symbol = $this->symbols->getSymbol(
+            (string)$context->current()
+        );
 
-        if ($symbol instanceof StatementSymbolInterface) {
-            $context->advance();
-            $statement = $symbol->std($context);
-            $statement->rewind();
-            $context->getScope()->reserve($statement->current(), $symbol);
-        } else {
-            $statement = new Statement(
-                new ArrayIterator(
-                    [$context->parseExpression(0)]
-                )
-            );
+        return (
+            $symbol instanceof StatementSymbolInterface
+                ? $this->parseStatementSymbol($symbol, $context)
+                : $this->parseStatementExpression($context)
+        );
+    }
 
-            if ($this->endStatementToken !== null) {
-                $context->advance($this->endStatementToken);
-            }
+    /**
+     * Parse a statement by parsing it as an expression.
+     *
+     * @param ParseContextInterface $context
+     *
+     * @return StatementInterface
+     */
+    private function parseStatementExpression(
+        ParseContextInterface $context
+    ): StatementInterface {
+        $statement = new Statement(
+            new ArrayIterator(
+                [$context->parseExpression(0)]
+            )
+        );
+
+        if ($this->endStatementToken !== null) {
+            $context->advance($this->endStatementToken);
         }
+
+        return $statement;
+    }
+
+    /**
+     * Parse statement symbol using the provided context.
+     *
+     * @param StatementSymbolInterface $symbol
+     * @param ParseContextInterface    $context
+     *
+     * @return StatementInterface
+     */
+    private function parseStatementSymbol(
+        StatementSymbolInterface $symbol,
+        ParseContextInterface $context
+    ): StatementInterface {
+        $context->advance();
+        $statement = $symbol->std($context);
+        $statement->rewind();
 
         return $statement;
     }
