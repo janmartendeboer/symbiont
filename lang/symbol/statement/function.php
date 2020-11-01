@@ -26,7 +26,6 @@ return new Prefix(
 
         // @todo support named functions.
 
-        $context->newScope();
         $arguments = $argumentParser($context);
 
         $context->advance('T_CURLY_OPEN');
@@ -37,7 +36,6 @@ return new Prefix(
             $context->parseStatements()
         );
 
-        $context->popScope();
         $context->current('T_CURLY_CLOSE');
 
         return $function;

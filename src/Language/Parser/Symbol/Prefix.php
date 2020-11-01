@@ -48,15 +48,11 @@ class Prefix implements SymbolInterface
     private function createNud(): Closure
     {
         return function (ParseContextInterface $context): NodeInterface {
-            $node = new OperatorNode(
+            return new OperatorNode(
                 $this->getSequence(),
                 $context->current(),
                 $context->parseExpression($this->rightBindingPower)
             );
-
-            $context->getScope()->reserve($node, $this);
-
-            return $node;
         };
     }
 

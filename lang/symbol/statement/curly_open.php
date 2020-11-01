@@ -16,9 +16,7 @@ return new Statement(
     '{',
     function (ParseContextInterface $context): iterable {
         $context->advance('T_CURLY_OPEN');
-        $context->newScope();
         $statements = $context->parseStatements();
-        $context->popScope();
         $context->current('T_CURLY_CLOSE');
 
         return $statements;

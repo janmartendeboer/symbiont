@@ -18,11 +18,8 @@ return function (ParseContextInterface $context): array {
     $context->advance('T_PAREN_OPEN');
 
     while ($context->current()->getName() !== 'T_PAREN_CLOSE') {
-        $name   = $context->current();
-        $symbol = $context->getSymbol($name);
-        $value  = $context->parseExpression(0);
-
-        $context->getScope()->define($value, $symbol);
+        $name  = $context->current();
+        $value = $context->parseExpression(0);
 
         $arguments[$name->getValue()] = $value;
 

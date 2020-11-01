@@ -16,8 +16,6 @@ use Symbiont\Language\Ast\Node\NodeInterface;
 use Symbiont\Language\Ast\Statement\StatementInterface;
 use Symbiont\Language\Ast\Statement\StatementList;
 use Symbiont\Language\Ast\Statement\StatementListInterface;
-use Symbiont\Language\Parser\Scope\BlockScope;
-use Symbiont\Language\Parser\Scope\ScopeInterface;
 use Symbiont\Language\Parser\Symbol\SymbolHolderInterface;
 use Symbiont\Language\Parser\Symbol\SymbolInterface;
 use Symbiont\Language\Tokenizer\TokenInterface;
@@ -27,8 +25,6 @@ use Symbiont\Language\Tokenizer\UnexpectedTokenException;
 
 class ParseContext implements ParseContextInterface
 {
-    private ScopeInterface $scope;
-
     private ParserInterface $parser;
 
     private TokenStreamInterface $tokens;
@@ -41,28 +37,15 @@ class ParseContext implements ParseContextInterface
      * @param ParserInterface       $parser
      * @param TokenStreamInterface  $tokens
      * @param SymbolHolderInterface $symbols
-     * @param ScopeInterface|null   $scope
      */
     public function __construct(
         ParserInterface $parser,
         TokenStreamInterface $tokens,
-        SymbolHolderInterface $symbols,
-        ScopeInterface $scope = null
+        SymbolHolderInterface $symbols
     ) {
         $this->parser  = $parser;
         $this->tokens  = $tokens;
         $this->symbols = $symbols;
-        $this->scope   = $scope ?? new BlockScope();
-    }
-
-    /**
-     * Get the current scope.
-     *
-     * @return ScopeInterface
-     */
-    public function getScope(): ScopeInterface
-    {
-        return $this->scope;
     }
 
     /**
@@ -166,26 +149,5 @@ class ParseContext implements ParseContextInterface
     public function getSymbol(string $token): ?SymbolInterface
     {
         return $this->symbols->getSymbol($token);
-    }
-
-    /**
-     * Create a sub-scope relative to the current scope and make it the current
-     * scope.
-     *
-     * @return ScopeInterface
-     */
-    public function newScope(): ScopeInterface
-    {
-        return $this->scope = $this->scope->new();
-    }
-
-    /**
-     * Pop the scope and make the parent the current scope.
-     *
-     * @return ScopeInterface
-     */
-    public function popScope(): ScopeInterface
-    {
-        return $this->scope = $this->scope->parent();
     }
 }
