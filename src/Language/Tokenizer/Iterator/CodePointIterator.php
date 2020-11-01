@@ -52,7 +52,7 @@ class CodePointIterator implements CursorInterface, Iterator
      */
     public function current(): ?string
     {
-        return $this->row
+        return $this->row !== null && $this->row->valid()
             ? $this->row->current()
             : null;
     }
@@ -133,13 +133,10 @@ class CodePointIterator implements CursorInterface, Iterator
      */
     public function valid(): bool
     {
-        // Either the current row exists and is valid, or the rows iterator is
-        // valid. They are not valid at the same time.
         return (
             $this->row !== null
             && $this->row->valid()
-        ) || (
-            $this->rows !== null
+            && $this->rows !== null
             && $this->rows->valid()
         );
     }
