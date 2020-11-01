@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is part of the Symbiont package.
  *
@@ -78,7 +79,7 @@ class TokenFinder implements TokenFinderInterface
             function (
                 ?TokenInterface $carry,
                 TokenStrategyInterface $strategy
-            ) use($sequence): ?TokenInterface {
+            ) use ($sequence): ?TokenInterface {
                 if ($carry === null) {
                     try {
                         $carry = $strategy($sequence);

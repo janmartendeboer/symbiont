@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is part of the Symbiont package.
  *
@@ -15,6 +16,9 @@ $tokenizer = require __DIR__ . '/tokenize.php';
 
 return function (
     SplFileObject $file
-) use ($parser, $tokenizer): StatementListInterface {
+) use (
+    $parser,
+    $tokenizer
+): StatementListInterface {
     return $parser($tokenizer($file));
 };

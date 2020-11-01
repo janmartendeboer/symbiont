@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is part of the Symbiont package.
  *
@@ -110,7 +111,8 @@ class Parser implements ParserInterface
         $subject = $context->advance();
         $symbol  = $this->symbols->getSymbol($subject);
 
-        while ($symbol !== null
+        while (
+            $symbol !== null
             && $bindingPower < $symbol->getBindingPower()
         ) {
             $context->advance();
@@ -169,7 +171,8 @@ class Parser implements ParserInterface
             while (true) {
                 $token = $context->current();
 
-                if ($token === null
+                if (
+                    $token === null
                     || in_array($token->getName(), $this->endStatementList, true)
                 ) {
                     break;

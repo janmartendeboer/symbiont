@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is part of the Symbiont package.
  *
@@ -74,10 +75,10 @@ $nodeFormatter = new class
 
         if (count($dependents)) {
             $result .= $padding . sprintf(
-                    '"%s" -> {"%s"}',
-                    $key,
-                    implode('", "', array_unique($dependents))
-                ) . PHP_EOL;
+                '"%s" -> {"%s"}',
+                $key,
+                implode('", "', array_unique($dependents))
+            ) . PHP_EOL;
         }
 
         $result .= $padding . sprintf('"%s" -> "%s"', $parent, $key) . PHP_EOL;
@@ -180,8 +181,7 @@ $nodeFormatter = new class
     }
 };
 
-return function (StatementListInterface $statements) use ($nodeFormatter): void
-{
+return function (StatementListInterface $statements) use ($nodeFormatter): void {
     $result = 'digraph AST {' . PHP_EOL;
 
     foreach ($statements as $statement) {

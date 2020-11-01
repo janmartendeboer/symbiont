@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is part of the Symbiont package.
  *
@@ -55,7 +56,7 @@ final class Arity implements JsonSerializable
 
     /**
      * Get the unary instance.
-     * 
+     *
      * @return self
      */
     public static function unary(): self

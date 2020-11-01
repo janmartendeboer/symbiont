@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is part of the Symbiont package.
  *
@@ -52,7 +53,8 @@ class TokenOptimizer implements TokenizerInterface
         return new TokenStream(
             (function () use ($file): Generator {
                 foreach ($this->tokenizer->__invoke($file) as $token) {
-                    if (!$token instanceof TokenInterface
+                    if (
+                        !$token instanceof TokenInterface
                         || in_array($token->getName(), $this->blacklist, true)
                     ) {
                         continue;

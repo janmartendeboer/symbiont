@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is part of the Symbiont package.
  *
@@ -12,8 +13,7 @@ use Symbiont\Language\Tokenizer\TokenStream;
 
 $verbose = (bool)getenv('SYMBIONT_VERBOSE');
 
-return function (TokenStream $tokens) use($verbose): void
-{
+return function (TokenStream $tokens) use ($verbose): void {
     $result = '';
 
     foreach ($tokens as $token) {
