@@ -14,7 +14,6 @@ namespace Symbiont\Language\Parser;
 use Symbiont\Language\Ast\Node\NodeInterface;
 use Symbiont\Language\Ast\Statement\StatementInterface;
 use Symbiont\Language\Ast\Statement\StatementListInterface;
-use Symbiont\Language\Parser\Scope\ScopeInterface;
 use Symbiont\Language\Parser\Symbol\SymbolHolderInterface;
 use Symbiont\Language\Tokenizer\TokenPointerInterface;
 use Symbiont\Language\Tokenizer\TokenInterface;
@@ -24,28 +23,6 @@ interface ParseContextInterface extends
     TokenPointerInterface,
     SymbolHolderInterface
 {
-    /**
-     * Get the current scope.
-     *
-     * @return ScopeInterface
-     */
-    public function getScope(): ScopeInterface;
-
-    /**
-     * Create a sub-scope relative to the current scope and make it the current
-     * scope.
-     *
-     * @return ScopeInterface
-     */
-    public function newScope(): ScopeInterface;
-
-    /**
-     * Pop the scope and make the parent the current scope.
-     *
-     * @return ScopeInterface
-     */
-    public function popScope(): ScopeInterface;
-
     /**
      * Parse the current expression with the given binding power.
      *
