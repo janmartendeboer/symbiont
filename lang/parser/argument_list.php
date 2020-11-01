@@ -17,15 +17,18 @@ return function (ParseContextInterface $context): array {
 
     $context->advance('T_PAREN_OPEN');
 
-    while ($context->current()->getName() !== 'T_PAREN_CLOSE') {
-        $name  = $context->current();
+    for (
+        $name = $context->current();
+        $name != null && $name->getName() !== 'T_PAREN_CLOSE';
+        $name = $context->current()
+    ) {
         $value = $context->parseExpression(0);
 
         $arguments[$name->getValue()] = $value;
 
         $separator = $context->current();
 
-        if ($separator->getName() !== 'T_COMMA') {
+        if ($separator === null || $separator->getName() !== 'T_COMMA') {
             break;
         }
 
