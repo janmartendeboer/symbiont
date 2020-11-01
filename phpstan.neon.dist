@@ -1,6 +1,6 @@
 parameters:
   level: 8
-  paths: [src, tests, lang]
+  paths: [bin, src, tests, lang]
 
   reportUnmatchedIgnoredErrors: true
   ignoreErrors:
