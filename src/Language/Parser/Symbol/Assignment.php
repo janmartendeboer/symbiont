@@ -74,14 +74,13 @@ class Assignment implements SymbolInterface
      * @param NodeInterface         $left
      *
      * @return NodeInterface
-     * @SuppressWarnings(PHPMD.StaticAccess)
      */
     public function led(
         ParseContextInterface $context,
         TokenInterface $subject,
         NodeInterface $left
     ): NodeInterface {
-        if (!$left->getArity()->equals(Arity::name())) {
+        if (!$left->getArity()->isName()) {
             throw $this->createException(
                 $subject,
                 sprintf('Unexpected %s.', $left->getArity()),
