@@ -19,6 +19,10 @@ return function (TokenStream $tokens) use ($verbose): void {
     $result = '';
 
     foreach ($tokens as $token) {
+        if ($token === null) {
+            continue;
+        }
+
         $entry = sprintf(
             "%s\t\t%s",
             $token->getName(),
@@ -27,15 +31,18 @@ return function (TokenStream $tokens) use ($verbose): void {
 
         if ($verbose) {
             $context = $token->getContext();
-            $entry = sprintf(
-                "%s\t%d:%d\t%d:%d\t\t%s",
-                $context->getFile()->getPathname(),
-                $context->getStart()->getLine(),
-                $context->getStart()->getColumn(),
-                $context->getEnd()->getLine(),
-                $context->getEnd()->getColumn(),
-                $entry
-            );
+
+            if ($context !== null) {
+                $entry = sprintf(
+                    "%s\t%d:%d\t%d:%d\t\t%s",
+                    $context->getFile()->getPathname(),
+                    $context->getStart()->getLine(),
+                    $context->getStart()->getColumn(),
+                    $context->getEnd()->getLine(),
+                    $context->getEnd()->getColumn(),
+                    $entry
+                );
+            }
         }
 
         $result .= $entry . PHP_EOL;

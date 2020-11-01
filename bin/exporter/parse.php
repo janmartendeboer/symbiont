@@ -22,6 +22,6 @@ return function (StatementListInterface $statements): void {
             | JSON_HEX_QUOT
             | JSON_NUMERIC_CHECK
             | JSON_PRETTY_PRINT
-        )
+        ) ?: ''
     );
 };
