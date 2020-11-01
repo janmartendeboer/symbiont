@@ -36,7 +36,7 @@ class SymbolStrategy implements TokenStrategyInterface
     /**
      * Get the token sequences.
      *
-     * @return array
+     * @return string[]
      */
     private function getSequences(): array
     {
@@ -52,7 +52,7 @@ class SymbolStrategy implements TokenStrategyInterface
      *
      * @param int $length
      *
-     * @return array
+     * @return array<string, string>
      */
     private function getOptions(int $length): array
     {

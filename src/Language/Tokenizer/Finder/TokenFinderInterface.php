@@ -20,7 +20,7 @@ interface TokenFinderInterface
     /**
      * Find the next token.
      *
-     * @param Iterator $characters
+     * @param Iterator<mixed, string> $characters
      *
      * @return TokenInterface
      *

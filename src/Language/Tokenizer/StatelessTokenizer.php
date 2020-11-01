@@ -65,7 +65,7 @@ class StatelessTokenizer implements TokenizerInterface
      * @param TokenFinderInterface $finder
      * @param string|null $endToken
      *
-     * @return Generator
+     * @return Generator<int, TokenInterface>
      */
     private static function createTokenGenerator(
         SplFileInfo $file,

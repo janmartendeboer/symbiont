@@ -18,9 +18,9 @@ class FunctionNode extends AbstractBinaryNode
     /**
      * Constructor.
      *
-     * @param TokenInterface         $token
-     * @param iterable               $argumentList
-     * @param StatementListInterface $body
+     * @param TokenInterface                  $token
+     * @param iterable<string, NodeInterface> $argumentList
+     * @param StatementListInterface          $body
      *
      * @SuppressWarnings(PHPMD.StaticAccess)
      */

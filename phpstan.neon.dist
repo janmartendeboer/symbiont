@@ -17,5 +17,8 @@ parameters:
     # Because PHPStan does not account for a fourth layer of abstraction concerning
     # Iterator interfaces, the inspection fails, regardless of how the interface
     # is configured to expose its knowledge of being a generic.
-    - message: '#Interface Symbiont\\Language\\Tokenizer\\TokenStreamInterface extends generic interface Iterator but does not specify its types: TKey, TValue#'
-      path: src/Language/Tokenizer/TokenStreamInterface.php
+    - message: '#Interface Symbiont\\Language\\[\S]+Interface extends generic interface Iterator but does not specify its types: TKey, TValue#'
+      paths:
+        - src/Language/Ast/Statement/StatementInterface.php
+        - src/Language/Ast/Statement/StatementListInterface.php
+        - src/Language/Tokenizer/TokenStreamInterface.php

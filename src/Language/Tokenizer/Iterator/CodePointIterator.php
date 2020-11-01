@@ -17,12 +17,16 @@ use SplFileInfo;
 use SplFileObject;
 use Symbiont\Language\Tokenizer\Cursor\CursorInterface;
 
+/**
+ * @implements Iterator<string, string>
+ */
 class CodePointIterator implements CursorInterface, Iterator
 {
     private SplFileInfo $file;
 
     private ?SplFileObject $rows = null;
 
+    /** @var Iterator<int, string>|null */
     private ?Iterator $row = null;
 
     private string $locale;
@@ -79,9 +83,9 @@ class CodePointIterator implements CursorInterface, Iterator
      * Create an iterator for the current row, or null if the current row is not
      * valid.
      *
-     * @param Iterator $rows
+     * @param Iterator<int, string> $rows
      *
-     * @return Iterator|null
+     * @return Iterator<int, string>|null
      * @SuppressWarnings(PHPMD.StaticAccess)
      */
     private function createRowIterator(Iterator $rows): ?Iterator
@@ -93,7 +97,7 @@ class CodePointIterator implements CursorInterface, Iterator
             $buffer->setText($this->rows->current());
 
             /**
-             * @var Iterator $row
+             * @var Iterator<int, string> $row
              * @noinspection PhpVoidFunctionResultUsedInspection
              */
             $row = $buffer->getPartsIterator();

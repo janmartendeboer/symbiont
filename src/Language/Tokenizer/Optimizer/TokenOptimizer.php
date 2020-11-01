@@ -21,6 +21,7 @@ use Symbiont\Language\Tokenizer\UnexpectedTokenSequenceException;
 
 class TokenOptimizer implements TokenizerInterface
 {
+    /** @var string[] */
     private array $blacklist;
 
     private TokenizerInterface $tokenizer;
