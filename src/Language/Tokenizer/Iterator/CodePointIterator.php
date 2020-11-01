@@ -82,6 +82,7 @@ class CodePointIterator implements CursorInterface, Iterator
      * @param Iterator $rows
      *
      * @return Iterator|null
+     * @SuppressWarnings(PHPMD.StaticAccess)
      */
     private function createRowIterator(Iterator $rows): ?Iterator
     {
