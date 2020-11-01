@@ -3,12 +3,14 @@
   <component name="MessDetector">
     <phpmd_settings>
       <phpmd_by_interpreter interpreter_id="6c1e0094-bf16-40c1-a632-c15b44624ff1" tool_path="/opt/project/vendor/bin/phpmd" timeout="30000" />
+      <MessDetectorConfiguration tool_path="$PROJECT_DIR$/vendor/bin/phpmd" />
     </phpmd_settings>
   </component>
   <component name="PhpAnalysisConfiguration" call_tree_analysis_depth="0" />
   <component name="PhpCodeSniffer">
     <phpcs_settings>
       <phpcs_by_interpreter interpreter_id="6c1e0094-bf16-40c1-a632-c15b44624ff1" standards="MySource;PEAR;PSR1;PSR12;PSR2;Squiz;Zend" tool_path="/opt/project/vendor/bin/phpcs" timeout="30000" />
+      <PhpCSConfiguration beautifier_path="$PROJECT_DIR$/vendor/bin/phpcbf" tool_path="$PROJECT_DIR$/vendor/bin/phpcs" />
     </phpcs_settings>
   </component>
   <component name="PhpIncludePathManager">
@@ -142,6 +144,7 @@
   <component name="PhpStan">
     <PhpStan_settings>
       <phpcs_fixer_by_interpreter interpreter_id="6c1e0094-bf16-40c1-a632-c15b44624ff1" tool_path="/opt/project/vendor/bin/phpstan" />
+      <PhpStanConfiguration tool_path="$PROJECT_DIR$/vendor/bin/phpstan" />
     </PhpStan_settings>
   </component>
   <component name="PhpUnit">
