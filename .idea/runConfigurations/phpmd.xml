@@ -4,7 +4,7 @@
       <settings>
         <option name="imageTag" value="srcoder/development-php:php74-fpm" />
         <option name="command" value="src,tests,lang ansi phpmd.xml.dist" />
-        <option name="containerName" value="symbiont_phpcs" />
+        <option name="containerName" value="symbiont_phpmd" />
         <option name="entrypoint" value="/opt/symbiont/vendor/bin/phpmd" />
         <option name="commandLineOptions" value="-u 1000:1000 -w /opt/symbiont" />
         <option name="volumeBindings">
