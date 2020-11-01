@@ -1,3 +1,10 @@
 parameters:
   level: 8
   paths: [src, tests, lang]
+  ignoreErrors:
+    - message: '#Variable \$this in PHPDoc tag \@var does not exist\.#'
+      paths:
+        - 'lang/*'
+    - message: '#Undefined variable: \$this#'
+      paths:
+        - 'lang/*'
