@@ -11,5 +11,9 @@
         <include>
             <directory suffix=".php">src</directory>
         </include>
+
+        <report>
+            <text showOnlySummary="true" outputFile="php://stdout" />
+        </report>
     </coverage>
 </phpunit>

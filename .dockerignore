@@ -2,9 +2,7 @@
 .github/
 _config.yml
 dev
-test
 README.md
-coverage/
 vendor/
 composer.lock
 phpunit.xml.dist

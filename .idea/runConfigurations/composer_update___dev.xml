@@ -1,0 +1,26 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="composer update --dev" type="docker-deploy" factoryName="docker-image" server-name="Docker">
+    <deployment type="docker-image">
+      <settings>
+        <option name="imageTag" value="srcoder/development-php:php74-fpm" />
+        <option name="command" value="update" />
+        <option name="containerName" value="symbiont_composer" />
+        <option name="entrypoint" value="composer" />
+        <option name="commandLineOptions" value="-u 1000:1000 -w /opt/symbiont" />
+        <option name="volumeBindings">
+          <list>
+            <DockerVolumeBindingImpl>
+              <option name="containerPath" value="/opt/symbiont" />
+              <option name="hostPath" value="$PROJECT_DIR$" />
+            </DockerVolumeBindingImpl>
+            <DockerVolumeBindingImpl>
+              <option name="containerPath" value="/data/.composer" />
+              <option name="hostPath" value="$USER_HOME$/.composer" />
+            </DockerVolumeBindingImpl>
+          </list>
+        </option>
+      </settings>
+    </deployment>
+    <method v="2" />
+  </configuration>
+</component>
