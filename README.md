@@ -34,17 +34,16 @@ $catalog: @products;
 $product: $catalog.ensure('tnt');
 
 $product
-    .branch('media_gallery_entries.*')
-    .filter(
-        $image => /portrait\.(jpg|png)$/.test($image.get('file'));
-    );
+    .forEach($_.media_gallery_entries)
+    .where($_.media_type = 'image')
+    .keepIf($_.file matches pcre2:/portrait\.(jpg|png)$/);
 ```
 
 The example consists of:
 
 - Variable `$catalog` pointing to a storage named `products`.
 - Variable `$product` pointing to an entity `tnt` from storage `products`.
-- Variable `$image` pointing to an image node, within the `$product` data structure.
+- Variable `$_` pointing to the current node, within the selection.
 
 The following operations are performed:
 
@@ -52,9 +51,10 @@ The following operations are performed:
 2. Variable `$product` points to storage `products` entry `tnt`.
    If entry `tnt` could not be found, it is created according to a predetermined
    structure, specific to the `products` storage.
-3. For each child of the `media_gallery_entries` data node of `$product`, a filter
-   is applied. Only entries with a `file` that ends in `portrait.jpg` or
-   `portrait.png` is kept.
+3. For each child of the `media_gallery_entries` data node of `$product` having
+   a media type `image`, a filter is applied.
+   Only entries with a `file` that end in `portrait.jpg` or `portrait.png` are
+   kept.
 4. End of program clean-up is triggered. This ensures the modifications on
    `$product` are persisted to the `products` storage.
 
@@ -62,13 +62,72 @@ The previous example is written verbosely to highlight individual parts of the
 syntax. The following code should work exactly the same:
 
 ```javascript
-@products
-    .ensure('tnt')
-    .branch('media_gallery_entries.*')
-    .filter(
-        $image => /portrait\.(jpg|png)$/.test($image.file);
-    );
+@products('tnt')
+    .forEach($_.media_gallery_entries)
+    .where($_.media_type = 'image')
+    .keepIf($_.file matches pcre2:/portrait\.(jpg|png)$/);
 ```
+
+## Applying the code
+
+The following shows a data structure, before and after applying the Symbiont
+program:
+
+```json
+[
+   {
+      "sku": "tnt",
+      "media_gallery_entries": [
+         {
+            "media_type": "image",
+            "file": "tnt_product_display_portrait.jpg"
+         },
+         {
+            "media_type": "image",
+            "file": "tnt_product_display_landscape.jpg"
+         },
+         {
+            "media_type": "video",
+            "file": "explosion_default_yield.mp4"
+         }
+      ]
+   }
+]
+```
+
+After having applied the program, the structure has been updated to the following:
+
+```json
+[
+   {
+      "sku": "tnt",
+      "media_gallery_entries": [
+         {
+            "media_type": "image",
+            "file": "tnt_product_display_portrait.jpg"
+         },
+         {
+            "media_type": "video",
+            "file": "explosion_default_yield.mp4"
+         }
+      ]
+   }
+]
+```
+
+The following happened:
+
+1. The product with SKU `tnt` got retrieved.
+2. An operation was prepared for each entry of `media_gallery_entries`.
+3. The operation was narrowed down to only apply to nodes having `media_type`
+   set to `image`.
+4. Nodes were kept if their `file` property matched against the given regular
+   expression. In this case, the file had to end in `portrait` and either use the
+   `.jpg` or `.png` extension.
+5. Changes were automatically persisted.
+   
+This effectively removed the "landscape" oriented product image, keeping the
+portrait image and video file.
 
 # How to use Symbiont
 
