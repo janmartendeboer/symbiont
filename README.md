@@ -68,6 +68,67 @@ syntax. The following code should work exactly the same:
     .keepIf($_.file matches pcre2:/portrait\.(jpg|png)$/);
 ```
 
+## Applying the code
+
+The following shows a data structure, before and after applying the Symbiont
+program:
+
+```json
+[
+   {
+      "sku": "tnt",
+      "media_gallery_entries": [
+         {
+            "media_type": "image",
+            "file": "tnt_product_display_portrait.jpg"
+         },
+         {
+            "media_type": "image",
+            "file": "tnt_product_display_landscape.jpg"
+         },
+         {
+            "media_type": "video",
+            "file": "explosion_default_yield.mp4"
+         }
+      ]
+   }
+]
+```
+
+After having applied the program, the structure has been updated to the following:
+
+```json
+[
+   {
+      "sku": "tnt",
+      "media_gallery_entries": [
+         {
+            "media_type": "image",
+            "file": "tnt_product_display_portrait.jpg"
+         },
+         {
+            "media_type": "video",
+            "file": "explosion_default_yield.mp4"
+         }
+      ]
+   }
+]
+```
+
+The following happened:
+
+1. The product with SKU `tnt` got retrieved.
+2. An operation was prepared for each entry of `media_gallery_entries`.
+3. The operation was narrowed down to only apply to nodes having `media_type`
+   set to `image`.
+4. Nodes were kept if their `file` property matched against the given regular
+   expression. In this case, the file had to end in `portrait` and either use the
+   `.jpg` or `.png` extension.
+5. Changes were automatically persisted.
+   
+This effectively removed the "landscape" oriented product image, keeping the
+portrait image and video file.
+
 # How to use Symbiont
 
 Currently, Symbiont can be run on a local installation of PHP >= PHP 7.4, or
