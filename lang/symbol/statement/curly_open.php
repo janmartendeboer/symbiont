@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is part of the Symbiont package.
  *
@@ -8,6 +9,8 @@
  * file that was distributed with this source code.
  */
 
+declare(strict_types=1);
+
 use Symbiont\Language\Parser\ParseContextInterface;
 use Symbiont\Language\Parser\Symbol\Statement;
 
@@ -15,9 +18,7 @@ return new Statement(
     '{',
     function (ParseContextInterface $context): iterable {
         $context->advance('T_CURLY_OPEN');
-        $context->newScope();
         $statements = $context->parseStatements();
-        $context->popScope();
         $context->current('T_CURLY_CLOSE');
 
         return $statements;

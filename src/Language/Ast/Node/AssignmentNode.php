@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is part of the Symbiont package.
  *
@@ -7,6 +8,8 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
+declare(strict_types=1);
 
 namespace Symbiont\Language\Ast\Node;
 
@@ -40,7 +43,7 @@ class AssignmentNode extends AbstractBinaryNode implements OperatorNodeInterface
     /**
      * Specify data which should be serialized to JSON.
      *
-     * @return array
+     * @return array<mixed, mixed>
      */
     public function jsonSerialize(): array
     {

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is part of the Symbiont package.
  *
@@ -7,6 +8,8 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
+declare(strict_types=1);
 
 namespace Symbiont\Language\Tokenizer\Strategy;
 
@@ -35,7 +38,7 @@ class SymbolStrategy implements TokenStrategyInterface
     /**
      * Get the token sequences.
      *
-     * @return array
+     * @return string[]
      */
     private function getSequences(): array
     {
@@ -51,7 +54,7 @@ class SymbolStrategy implements TokenStrategyInterface
      *
      * @param int $length
      *
-     * @return array
+     * @return array<string, string>
      */
     private function getOptions(int $length): array
     {

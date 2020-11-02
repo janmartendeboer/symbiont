@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is part of the Symbiont package.
  *
@@ -8,12 +9,15 @@
  * file that was distributed with this source code.
  */
 
+declare(strict_types=1);
+
 namespace Symbiont\Language\Parser\Symbol;
 
 use Symbiont\Language\Ast\Node\NodeInterface;
 use Symbiont\Language\Parser\ParseContextInterface;
 use Symbiont\Language\Parser\SyntaxException;
 use Symbiont\Language\Tokenizer\TokenInterface;
+use Symbiont\Language\Tokenizer\UnexpectedEndOfStreamException;
 
 // phpcs:disable Squiz.Commenting.FunctionComment.InvalidNoReturn
 trait NoNudTrait
@@ -26,12 +30,19 @@ trait NoNudTrait
      * @return NodeInterface
      *
      * @throws SyntaxException Always.
+     * @throws UnexpectedEndOfStreamException When there is no current token
      */
     public function nud(
         ParseContextInterface $context
     ): NodeInterface {
+        $token = $context->current();
+
+        if ($token === null) {
+            throw new UnexpectedEndOfStreamException(null);
+        }
+
         throw $this->createException(
-            $context->current(),
+            $token,
             'Cannot be used as null denoted operator.'
         );
     }

@@ -1,0 +1,3 @@
+<component name="DependencyValidationManager">
+  <scope name="Symbiont" pattern="file[symbiont]:bin//*||file[symbiont]:lang//*||file[symbiont]:src//*||file[symbiont]:tests//*" />
+</component>

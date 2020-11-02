@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is part of the Symbiont package.
  *
@@ -7,6 +8,8 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
+declare(strict_types=1);
 
 namespace Symbiont\Language\Parser\Symbol;
 
@@ -25,6 +28,7 @@ trait SyntaxExceptionTrait
      * @param NodeInterface|null $node
      *
      * @return SyntaxException
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function createException(
         TokenInterface $token,
@@ -35,7 +39,7 @@ trait SyntaxExceptionTrait
             $token,
             $this instanceof SymbolInterface
                 ? $this
-                : new Symbol($token->getValue()),
+                : new Symbol($token->getValue() ?? ''),
             $message
         );
     }

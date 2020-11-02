@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is part of the Symbiont package.
  *
@@ -8,9 +9,10 @@
  * file that was distributed with this source code.
  */
 
+declare(strict_types=1);
+
 namespace Symbiont\Language\Tokenizer;
 
-use Generator;
 use SplFileInfo;
 
 interface TokenizerInterface

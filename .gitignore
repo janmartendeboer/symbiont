@@ -6,6 +6,12 @@
 # XML file instead.
 /.idea/workspace.xml
 
+# Local Composer files.
 /vendor/
 /composer.lock
+
+# Local code quality configuration.
+/phpcs.xml
+/phpmd.xml
+/phpstan.neon
 /phpunit.xml

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 $locations = [
     __DIR__ . '/../vendor/autoload.php',
     __DIR__ . '/../../autoload.php'

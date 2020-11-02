@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is part of the Symbiont package.
  *
@@ -7,6 +8,8 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
+declare(strict_types=1);
 
 use Symbiont\Language\Ast\Node\BinaryNodeInterface;
 use Symbiont\Language\Ast\Node\NodeInterface;
@@ -68,16 +71,20 @@ $nodeFormatter = new class
         $dependents = [];
 
         foreach ($statement as $node) {
+            if ($node === null) {
+                continue;
+            }
+
             $dependents[] = sprintf('Node_%d', spl_object_id($node));
             $result .= rtrim($this->__invoke(null, $node, $indent + 1)) . PHP_EOL;
         }
 
         if (count($dependents)) {
             $result .= $padding . sprintf(
-                    '"%s" -> {"%s"}',
-                    $key,
-                    implode('", "', array_unique($dependents))
-                ) . PHP_EOL;
+                '"%s" -> {"%s"}',
+                $key,
+                implode('", "', array_unique($dependents))
+            ) . PHP_EOL;
         }
 
         $result .= $padding . sprintf('"%s" -> "%s"', $parent, $key) . PHP_EOL;
@@ -113,6 +120,15 @@ $nodeFormatter = new class
         return rtrim($result) . PHP_EOL;
     }
 
+    /**
+     * Format any type of value.
+     *
+     * @param string $parent
+     * @param mixed  $nodeValue
+     * @param int    $indent
+     *
+     * @return string
+     */
     private function formatValue(string $parent, $nodeValue, int $indent): string
     {
         if ($nodeValue instanceof NodeInterface) {
@@ -165,7 +181,7 @@ $nodeFormatter = new class
                         $nodeValue,
                         JSON_HEX_QUOT
                         | JSON_PRESERVE_ZERO_FRACTION
-                    ),
+                    ) ?: '',
                     '"'
                 )
             )
@@ -180,16 +196,23 @@ $nodeFormatter = new class
     }
 };
 
-return function (StatementListInterface $statements) use ($nodeFormatter): void
-{
+return function (StatementListInterface $statements) use ($nodeFormatter): void {
     $result = 'digraph AST {' . PHP_EOL;
 
     foreach ($statements as $statement) {
+        if ($statement === null) {
+            continue;
+        }
+
         $key = sprintf('Statement_%d', spl_object_id($statement));
 
         $result .= sprintf("\tsubgraph %s {\n\t\tlabel=\"Statement\"", $key) . PHP_EOL;
 
         foreach ($statement as $node) {
+            if ($node === null) {
+                continue;
+            }
+
             $result .= rtrim($nodeFormatter(null, $node, 2)) . PHP_EOL;
         }
 

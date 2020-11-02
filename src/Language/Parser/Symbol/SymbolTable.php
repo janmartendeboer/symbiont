@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is part of the Symbiont package.
  *
@@ -7,6 +8,8 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
+declare(strict_types=1);
 
 namespace Symbiont\Language\Parser\Symbol;
 
@@ -66,14 +69,14 @@ class SymbolTable implements SymbolTableInterface
      *
      * @param string $pattern
      *
-     * @return $this
+     * @return self
      */
     public static function getInstance(string $pattern): self
     {
         if (!array_key_exists($pattern, static::$instances)) {
             static::$instances[$pattern] = new self();
 
-            foreach (glob($pattern) as $file) {
+            foreach (glob($pattern) ?: [] as $file) {
                 /** @noinspection PhpIncludeInspection */
                 $symbol = require $file;
 

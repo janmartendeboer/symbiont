@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is part of the Symbiont package.
  *
@@ -8,6 +9,8 @@
  * file that was distributed with this source code.
  */
 
+declare(strict_types=1);
+
 // Create a shared parser for all symbols that support an argument list.
 use Symbiont\Language\Parser\ParseContextInterface;
 
@@ -16,18 +19,18 @@ return function (ParseContextInterface $context): array {
 
     $context->advance('T_PAREN_OPEN');
 
-    while ($context->current()->getName() !== 'T_PAREN_CLOSE') {
-        $name   = $context->current();
-        $symbol = $context->getSymbol($name);
-        $value  = $context->parseExpression(0);
-
-        $context->getScope()->define($value, $symbol);
+    for (
+        $name = $context->current();
+        $name != null && $name->getName() !== 'T_PAREN_CLOSE';
+        $name = $context->current()
+    ) {
+        $value = $context->parseExpression(0);
 
         $arguments[$name->getValue()] = $value;
 
         $separator = $context->current();
 
-        if ($separator->getName() !== 'T_COMMA') {
+        if ($separator === null || $separator->getName() !== 'T_COMMA') {
             break;
         }
 

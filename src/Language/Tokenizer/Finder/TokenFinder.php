@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is part of the Symbiont package.
  *
@@ -7,6 +8,8 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
+declare(strict_types=1);
 
 namespace Symbiont\Language\Tokenizer\Finder;
 
@@ -17,8 +20,8 @@ use Symbiont\Language\Tokenizer\UnexpectedTokenSequenceException;
 
 class TokenFinder implements TokenFinderInterface
 {
-    /** @var TokenStrategyInterface[] */
-    private iterable $strategies;
+    /** @var array<int, TokenStrategyInterface> */
+    private array $strategies;
 
     /**
      * Constructor.
@@ -33,7 +36,7 @@ class TokenFinder implements TokenFinderInterface
     /**
      * Find the next token.
      *
-     * @param Iterator $characters
+     * @param Iterator<mixed, string> $characters
      *
      * @return TokenInterface
      *
@@ -68,26 +71,18 @@ class TokenFinder implements TokenFinderInterface
             $previous  = $strategies;
         }
 
-        if (count($previous) === 0) {
-            throw new UnexpectedTokenSequenceException($sequence);
-        }
-
         $sequence = substr($sequence, 0, -1);
         $token    = array_reduce(
             $previous,
             function (
                 ?TokenInterface $carry,
                 TokenStrategyInterface $strategy
-            ) use($sequence): ?TokenInterface {
-                if ($carry === null) {
-                    try {
-                        $carry = $strategy($sequence);
-                    } catch (UnexpectedTokenSequenceException $exception) {
-                        $carry = null;
-                    }
+            ) use ($sequence): ?TokenInterface {
+                try {
+                    return $carry ?? $strategy($sequence);
+                } catch (UnexpectedTokenSequenceException $exception) {
+                    return $carry;
                 }
-
-                return $carry;
             }
         );
 

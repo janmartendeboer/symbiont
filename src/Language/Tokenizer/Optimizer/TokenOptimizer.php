@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is part of the Symbiont package.
  *
@@ -7,6 +8,8 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
+declare(strict_types=1);
 
 namespace Symbiont\Language\Tokenizer\Optimizer;
 
@@ -20,6 +23,7 @@ use Symbiont\Language\Tokenizer\UnexpectedTokenSequenceException;
 
 class TokenOptimizer implements TokenizerInterface
 {
+    /** @var string[] */
     private array $blacklist;
 
     private TokenizerInterface $tokenizer;
@@ -52,7 +56,8 @@ class TokenOptimizer implements TokenizerInterface
         return new TokenStream(
             (function () use ($file): Generator {
                 foreach ($this->tokenizer->__invoke($file) as $token) {
-                    if (!$token instanceof TokenInterface
+                    if (
+                        !$token instanceof TokenInterface
                         || in_array($token->getName(), $this->blacklist, true)
                     ) {
                         continue;

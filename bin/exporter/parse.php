@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is part of the Symbiont package.
  *
@@ -8,10 +9,11 @@
  * file that was distributed with this source code.
  */
 
+declare(strict_types=1);
+
 use Symbiont\Language\Ast\Statement\StatementListInterface;
 
-return function (StatementListInterface $statements): void
-{
+return function (StatementListInterface $statements): void {
     fwrite(
         STDOUT,
         json_encode(
@@ -20,6 +22,6 @@ return function (StatementListInterface $statements): void
             | JSON_HEX_QUOT
             | JSON_NUMERIC_CHECK
             | JSON_PRETTY_PRINT
-        )
+        ) ?: ''
     );
 };

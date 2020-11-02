@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is part of the Symbiont package.
  *
@@ -8,6 +9,8 @@
  * file that was distributed with this source code.
  */
 
+declare(strict_types=1);
+
 namespace Symbiont\Language\Tokenizer\Iterator;
 
 use IntlBreakIterator;
@@ -16,12 +19,16 @@ use SplFileInfo;
 use SplFileObject;
 use Symbiont\Language\Tokenizer\Cursor\CursorInterface;
 
+/**
+ * @implements Iterator<string, string>
+ */
 class CodePointIterator implements CursorInterface, Iterator
 {
     private SplFileInfo $file;
 
     private ?SplFileObject $rows = null;
 
+    /** @var Iterator<int, string>|null */
     private ?Iterator $row = null;
 
     private string $locale;
@@ -45,7 +52,7 @@ class CodePointIterator implements CursorInterface, Iterator
      */
     public function current(): ?string
     {
-        return $this->row
+        return $this->row !== null && $this->row->valid()
             ? $this->row->current()
             : null;
     }
@@ -65,11 +72,14 @@ class CodePointIterator implements CursorInterface, Iterator
             // row.
             if (!$this->row->valid()) {
                 $this->row = null;
-                $this->rows->next();
+
+                if ($this->rows !== null) {
+                    $this->rows->next();
+                }
             }
         }
 
-        if ($this->row === null) {
+        if ($this->row === null && $this->rows !== null) {
             $this->row = $this->createRowIterator($this->rows);
         }
     }
@@ -78,9 +88,10 @@ class CodePointIterator implements CursorInterface, Iterator
      * Create an iterator for the current row, or null if the current row is not
      * valid.
      *
-     * @param Iterator $rows
+     * @param Iterator<int, string> $rows
      *
-     * @return Iterator|null
+     * @return Iterator<int, string>|null
+     * @SuppressWarnings(PHPMD.StaticAccess)
      */
     private function createRowIterator(Iterator $rows): ?Iterator
     {
@@ -88,10 +99,10 @@ class CodePointIterator implements CursorInterface, Iterator
 
         if ($rows->valid()) {
             $buffer = IntlBreakIterator::createCharacterInstance($this->locale);
-            $buffer->setText($this->rows->current());
+            $buffer->setText((string)$rows->current());
 
             /**
-             * @var Iterator $row
+             * @var Iterator<int, string> $row
              * @noinspection PhpVoidFunctionResultUsedInspection
              */
             $row = $buffer->getPartsIterator();
@@ -122,12 +133,12 @@ class CodePointIterator implements CursorInterface, Iterator
      */
     public function valid(): bool
     {
-        // Either the current row exists and is valid, or the rows iterator is
-        // valid. They are not valid at the same time.
         return (
             $this->row !== null
             && $this->row->valid()
-        ) || $this->rows->valid();
+            && $this->rows !== null
+            && $this->rows->valid()
+        );
     }
 
     /**
@@ -158,7 +169,9 @@ class CodePointIterator implements CursorInterface, Iterator
      */
     public function getLine(): int
     {
-        return $this->rows->key() + 1;
+        return $this->rows instanceof Iterator
+            ? $this->rows->key() + 1
+            : 0;
     }
 
     /**
@@ -168,7 +181,9 @@ class CodePointIterator implements CursorInterface, Iterator
      */
     public function getColumn(): int
     {
-        $offset = $this->row->key();
+        $offset = $this->row instanceof Iterator
+            ? $this->row->key()
+            : null;
 
         return $offset === null ? 0 : $offset + 1;
     }

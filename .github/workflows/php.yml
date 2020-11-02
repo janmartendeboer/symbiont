@@ -1,13 +1,42 @@
-name: PHPUnit
+name: PHP
 
 on:
   push:
-    branches: [ master ]
+    branches: [master]
   pull_request:
-    branches: [ master ]
+    branches: [master]
 
 jobs:
+  php:
+    name: ${{ matrix.command }}
+    runs-on: ubuntu-20.04
+
+    strategy:
+      fail-fast: false
+      matrix:
+        command:
+          - phpcs
+          - phpmd src,tests,lang ansi phpmd.xml.dist
+          - phpstan analyse
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Install PHP 7.4, Composer 2
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: 7.4
+          extensions: intl, json, pcre
+          tools: composer:v2
+
+      - name: Install Composer package
+        run: composer update
+
+      - run: vendor/bin/${{ matrix.command }}
+
   phpunit:
+    needs: [php]
     strategy:
       matrix:
         runner:

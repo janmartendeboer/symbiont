@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is part of the Symbiont package.
  *
@@ -8,6 +9,8 @@
  * file that was distributed with this source code.
  */
 
+declare(strict_types=1);
+
 namespace Symbiont\Language\Parser;
 
 use ArrayIterator;
@@ -15,8 +18,6 @@ use Symbiont\Language\Ast\Node\NodeInterface;
 use Symbiont\Language\Ast\Statement\StatementInterface;
 use Symbiont\Language\Ast\Statement\StatementList;
 use Symbiont\Language\Ast\Statement\StatementListInterface;
-use Symbiont\Language\Parser\Scope\BlockScope;
-use Symbiont\Language\Parser\Scope\ScopeInterface;
 use Symbiont\Language\Parser\Symbol\SymbolHolderInterface;
 use Symbiont\Language\Parser\Symbol\SymbolInterface;
 use Symbiont\Language\Tokenizer\TokenInterface;
@@ -26,8 +27,6 @@ use Symbiont\Language\Tokenizer\UnexpectedTokenException;
 
 class ParseContext implements ParseContextInterface
 {
-    private ScopeInterface $scope;
-
     private ParserInterface $parser;
 
     private TokenStreamInterface $tokens;
@@ -40,28 +39,15 @@ class ParseContext implements ParseContextInterface
      * @param ParserInterface       $parser
      * @param TokenStreamInterface  $tokens
      * @param SymbolHolderInterface $symbols
-     * @param ScopeInterface|null   $scope
      */
     public function __construct(
         ParserInterface $parser,
         TokenStreamInterface $tokens,
-        SymbolHolderInterface $symbols,
-        ScopeInterface $scope = null
+        SymbolHolderInterface $symbols
     ) {
         $this->parser  = $parser;
         $this->tokens  = $tokens;
         $this->symbols = $symbols;
-        $this->scope   = $scope ?? new BlockScope();
-    }
-
-    /**
-     * Get the current scope.
-     *
-     * @return ScopeInterface
-     */
-    public function getScope(): ScopeInterface
-    {
-        return $this->scope;
     }
 
     /**
@@ -79,7 +65,13 @@ class ParseContext implements ParseContextInterface
      */
     public function advance(string $token = null): TokenInterface
     {
-        return $this->tokens->advance($token);
+        $result = $this->tokens->advance($token);
+
+        if ($result === null) {
+            throw new UnexpectedEndOfStreamException($token);
+        }
+
+        return $result;
     }
 
     /**
@@ -94,6 +86,10 @@ class ParseContext implements ParseContextInterface
     public function current(string $token = null): ?TokenInterface
     {
         $current = $this->tokens->current();
+
+        if ($current === null) {
+            throw new UnexpectedEndOfStreamException($token);
+        }
 
         if ($token !== null && $current->getName() !== $token) {
             throw new UnexpectedTokenException($token, $current);
@@ -165,26 +161,5 @@ class ParseContext implements ParseContextInterface
     public function getSymbol(string $token): ?SymbolInterface
     {
         return $this->symbols->getSymbol($token);
-    }
-
-    /**
-     * Create a sub-scope relative to the current scope and make it the current
-     * scope.
-     *
-     * @return ScopeInterface
-     */
-    public function newScope(): ScopeInterface
-    {
-        return $this->scope = $this->scope->new();
-    }
-
-    /**
-     * Pop the scope and make the parent the current scope.
-     *
-     * @return ScopeInterface
-     */
-    public function popScope(): ScopeInterface
-    {
-        return $this->scope = $this->scope->parent();
     }
 }

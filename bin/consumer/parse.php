@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is part of the Symbiont package.
  *
@@ -8,6 +9,8 @@
  * file that was distributed with this source code.
  */
 
+declare(strict_types=1);
+
 use Symbiont\Language\Ast\Statement\StatementListInterface;
 
 $parser = require __DIR__ . '/../../lang/parser.php';
@@ -15,6 +18,9 @@ $tokenizer = require __DIR__ . '/tokenize.php';
 
 return function (
     SplFileObject $file
-) use ($parser, $tokenizer): StatementListInterface {
+) use (
+    $parser,
+    $tokenizer
+): StatementListInterface {
     return $parser($tokenizer($file));
 };

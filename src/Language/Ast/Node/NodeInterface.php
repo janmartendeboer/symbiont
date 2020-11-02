@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is part of the Symbiont package.
  *
@@ -8,9 +9,12 @@
  * file that was distributed with this source code.
  */
 
+declare(strict_types=1);
+
 namespace Symbiont\Language\Ast\Node;
 
 use JsonSerializable;
+use Symbiont\Language\Ast\Node\Arity\Arity;
 use Symbiont\Language\Tokenizer\TokenInterface;
 
 interface NodeInterface extends JsonSerializable
@@ -32,7 +36,7 @@ interface NodeInterface extends JsonSerializable
     /**
      * Specify data which should be serialized to JSON.
      *
-     * @return array
+     * @return array<mixed, mixed>
      */
     public function jsonSerialize(): array;
 }

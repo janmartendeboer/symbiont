@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is part of the Symbiont package.
  *
@@ -7,6 +8,8 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
+declare(strict_types=1);
 
 namespace Symbiont\Language\Parser\Symbol;
 
@@ -28,6 +31,7 @@ trait NoLedTrait
      * @return NodeInterface
      *
      * @throws SyntaxException Always.
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function led(
         ParseContextInterface $context,

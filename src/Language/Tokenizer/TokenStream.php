@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is part of the Symbiont package.
  *
@@ -7,6 +8,8 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
+declare(strict_types=1);
 
 namespace Symbiont\Language\Tokenizer;
 
@@ -47,7 +50,11 @@ class TokenStream extends IteratorIterator implements TokenStreamInterface
 
         $current = $this->current();
 
-        if ($token !== null && $current->getName() !== $token) {
+        if (
+            $token !== null
+            && $current !== null
+            && $current->getName() !== $token
+        ) {
             throw new UnexpectedTokenException($token, $current);
         }
 

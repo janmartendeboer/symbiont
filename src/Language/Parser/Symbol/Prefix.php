@@ -1,8 +1,15 @@
 <?php
+
 /**
- * Copyright MediaCT. All rights reserved.
- * https://www.mediact.nl
+ * This file is part of the Symbiont package.
+ *
+ * (c) Jan-Marten de Boer <symbiont@janmarten.name>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
+
+declare(strict_types=1);
 
 namespace Symbiont\Language\Parser\Symbol;
 
@@ -10,6 +17,7 @@ use Closure;
 use Symbiont\Language\Ast\Node\NodeInterface;
 use Symbiont\Language\Ast\Node\OperatorNode;
 use Symbiont\Language\Parser\ParseContextInterface;
+use Symbiont\Language\Tokenizer\UnexpectedEndOfStreamException;
 
 class Prefix implements SymbolInterface
 {
@@ -43,19 +51,23 @@ class Prefix implements SymbolInterface
 
     /**
      * @return Closure
+     *
+     * @throws UnexpectedEndOfStreamException When there is no current token.
      */
     private function createNud(): Closure
     {
         return function (ParseContextInterface $context): NodeInterface {
-            $node = new OperatorNode(
-                $this->getSequence(),
-                $context->current(),
+            $token = $context->current();
+
+            if ($token === null) {
+                throw new UnexpectedEndOfStreamException($this->getSequence());
+            }
+
+            return new OperatorNode(
+                $this->getSequence() ?? '',
+                $token,
                 $context->parseExpression($this->rightBindingPower)
             );
-
-            $context->getScope()->reserve($node, $this);
-
-            return $node;
         };
     }
 

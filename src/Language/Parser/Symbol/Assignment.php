@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is part of the Symbiont package.
  *
@@ -8,9 +9,10 @@
  * file that was distributed with this source code.
  */
 
+declare(strict_types=1);
+
 namespace Symbiont\Language\Parser\Symbol;
 
-use Symbiont\Language\Ast\Node\Arity;
 use Symbiont\Language\Ast\Node\AssignmentNode;
 use Symbiont\Language\Ast\Node\LiteralNodeInterface;
 use Symbiont\Language\Ast\Node\NodeInterface;
@@ -79,7 +81,7 @@ class Assignment implements SymbolInterface
         TokenInterface $subject,
         NodeInterface $left
     ): NodeInterface {
-        if (!$left->getArity()->equals(Arity::name())) {
+        if (!$left->getArity()->isName()) {
             throw $this->createException(
                 $subject,
                 sprintf('Unexpected %s.', $left->getArity()),
@@ -88,7 +90,7 @@ class Assignment implements SymbolInterface
         }
 
         return new AssignmentNode(
-            $this->getSequence(),
+            $this->getSequence() ?? '',
             $subject,
             $left,
             $context->parseExpression($this->getBindingPower() - 1)

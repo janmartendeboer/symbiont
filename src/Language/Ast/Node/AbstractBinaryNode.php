@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is part of the Symbiont package.
  *
@@ -8,7 +9,11 @@
  * file that was distributed with this source code.
  */
 
+declare(strict_types=1);
+
 namespace Symbiont\Language\Ast\Node;
+
+use Symbiont\Language\Ast\Node\Arity\Arity;
 
 abstract class AbstractBinaryNode extends AbstractUnaryNode implements
     BinaryNodeInterface
@@ -20,6 +25,7 @@ abstract class AbstractBinaryNode extends AbstractUnaryNode implements
      * Create the arity that matches the current node type.
      *
      * @return Arity
+     * @SuppressWarnings(PHPMD.StaticAccess)
      */
     protected function createArity(): Arity
     {
@@ -39,7 +45,7 @@ abstract class AbstractBinaryNode extends AbstractUnaryNode implements
     /**
      * Specify data which should be serialized to JSON.
      *
-     * @return array
+     * @return array<mixed, mixed>
      */
     public function jsonSerialize(): array
     {

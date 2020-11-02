@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is part of the Symbiont package.
  *
@@ -7,6 +8,8 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
+declare(strict_types=1);
 
 use Symbiont\Language\Ast\Node\FunctionNode;
 use Symbiont\Language\Ast\Node\NodeInterface;
@@ -21,11 +24,17 @@ return new Prefix(
         ParseContextInterface $context
     ) use ($argumentParser): NodeInterface {
         $token = $context->current();
+
+        if ($token === null) {
+            throw new DomainException(
+                'Expected T_FUNCTION, got null.'
+            );
+        }
+
         $context->advance('T_FUNCTION');
 
         // @todo support named functions.
 
-        $context->newScope();
         $arguments = $argumentParser($context);
 
         $context->advance('T_CURLY_OPEN');
@@ -36,7 +45,6 @@ return new Prefix(
             $context->parseStatements()
         );
 
-        $context->popScope();
         $context->current('T_CURLY_CLOSE');
 
         return $function;

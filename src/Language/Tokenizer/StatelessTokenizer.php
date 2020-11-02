@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is part of the Symbiont package.
  *
@@ -7,6 +8,8 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
+declare(strict_types=1);
 
 namespace Symbiont\Language\Tokenizer;
 
@@ -64,7 +67,7 @@ class StatelessTokenizer implements TokenizerInterface
      * @param TokenFinderInterface $finder
      * @param string|null $endToken
      *
-     * @return Generator
+     * @return Generator<int, TokenInterface>
      */
     private static function createTokenGenerator(
         SplFileInfo $file,
