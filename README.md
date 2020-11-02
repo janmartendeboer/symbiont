@@ -34,17 +34,16 @@ $catalog: @products;
 $product: $catalog.ensure('tnt');
 
 $product
-    .branch('media_gallery_entries.*')
-    .filter(
-        $image => /portrait\.(jpg|png)$/.test($image.get('file'));
-    );
+    .forEach($_.media_gallery_entries)
+    .where($_.media_type = 'image')
+    .keepIf($_.file matches pcre2:/portrait\.(jpg|png)$/);
 ```
 
 The example consists of:
 
 - Variable `$catalog` pointing to a storage named `products`.
 - Variable `$product` pointing to an entity `tnt` from storage `products`.
-- Variable `$image` pointing to an image node, within the `$product` data structure.
+- Variable `$_` pointing to the current node, within the selection.
 
 The following operations are performed:
 
@@ -52,9 +51,10 @@ The following operations are performed:
 2. Variable `$product` points to storage `products` entry `tnt`.
    If entry `tnt` could not be found, it is created according to a predetermined
    structure, specific to the `products` storage.
-3. For each child of the `media_gallery_entries` data node of `$product`, a filter
-   is applied. Only entries with a `file` that ends in `portrait.jpg` or
-   `portrait.png` is kept.
+3. For each child of the `media_gallery_entries` data node of `$product` having
+   a media type `image`, a filter is applied.
+   Only entries with a `file` that end in `portrait.jpg` or `portrait.png` are
+   kept.
 4. End of program clean-up is triggered. This ensures the modifications on
    `$product` are persisted to the `products` storage.
 
@@ -62,12 +62,10 @@ The previous example is written verbosely to highlight individual parts of the
 syntax. The following code should work exactly the same:
 
 ```javascript
-@products
-    .ensure('tnt')
-    .branch('media_gallery_entries.*')
-    .filter(
-        $image => /portrait\.(jpg|png)$/.test($image.file);
-    );
+@products('tnt')
+    .forEach($_.media_gallery_entries)
+    .where($_.media_type = 'image')
+    .keepIf($_.file matches pcre2:/portrait\.(jpg|png)$/);
 ```
 
 # How to use Symbiont
