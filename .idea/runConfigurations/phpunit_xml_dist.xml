@@ -2,7 +2,7 @@
   <configuration default="false" name="phpunit.xml.dist" type="PHPUnitRunConfigurationType" factoryName="PHPUnit">
     <CommandLine>
       <PhpTestInterpreterSettings>
-        <option name="interpreterName" value="srcoder/development-php:php74-fpm" />
+        <option name="interpreterName" value="srcoder/development-php:php74-fpm (project level)" />
       </PhpTestInterpreterSettings>
     </CommandLine>
     <TestRunner configuration_file="/opt/project/phpunit.xml.dist" scope="XML" />
