@@ -20,8 +20,8 @@ return new class implements ConfiguratorInterface {
     {
         $spec->parser = new Parser(
             $spec->symbols,
-            $spec->blockMarkers->start,
-            $spec->blockMarkers->end,
+            $spec->blockMarkers->start ?? '',
+            $spec->blockMarkers->end ?? '',
             $spec->statementMarkers->end,
             $spec->programMarkers->end
         );
