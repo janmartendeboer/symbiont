@@ -23,5 +23,25 @@
         <env name="SYMBIONT_MODE" value="parse" />
       </envs>
     </TaskOptions>
+    <TaskOptions isEnabled="true">
+      <option name="arguments" value="run --rm -t -v &quot;$ProjectFileDir$:/opt/project&quot; -w /opt/project --entrypoint /opt/project/vendor/bin/phpstan srcoder/development-php:php74-fpm analyse $FilePathRelativeToProjectRoot$" />
+      <option name="checkSyntaxErrors" value="true" />
+      <option name="description" />
+      <option name="exitCodeBehavior" value="ERROR" />
+      <option name="fileExtension" value="php" />
+      <option name="immediateSync" value="true" />
+      <option name="name" value="PHPStan" />
+      <option name="output" value="" />
+      <option name="outputFilters">
+        <array />
+      </option>
+      <option name="outputFromStdout" value="false" />
+      <option name="program" value="docker" />
+      <option name="runOnExternalChanges" value="true" />
+      <option name="scopeName" value="Symbiont" />
+      <option name="trackOnlyRoot" value="false" />
+      <option name="workingDir" value="" />
+      <envs />
+    </TaskOptions>
   </component>
 </project>
