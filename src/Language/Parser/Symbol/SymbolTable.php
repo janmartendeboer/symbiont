@@ -18,9 +18,6 @@ class SymbolTable implements SymbolTableInterface
     /** @var array|SymbolInterface[] */
     private array $symbols = [];
 
-    /** @var array|self[] */
-    private static array $instances = [];
-
     /**
      * Register the given symbol for the given token name.
      *
@@ -62,36 +59,5 @@ class SymbolTable implements SymbolTableInterface
     public function getSymbol(string $token): ?SymbolInterface
     {
         return $this->symbols[$token] ?? null;
-    }
-
-    /**
-     * Get a symbol table for the supplied file pattern.
-     *
-     * @param string $pattern
-     *
-     * @return self
-     */
-    public static function getInstance(string $pattern): self
-    {
-        if (!array_key_exists($pattern, static::$instances)) {
-            static::$instances[$pattern] = new self();
-
-            foreach (glob($pattern) ?: [] as $file) {
-                /** @noinspection PhpIncludeInspection */
-                $symbol = require $file;
-
-                if ($symbol instanceof SymbolInterface) {
-                    static::$instances[$pattern]->register(
-                        sprintf(
-                            'T_%s',
-                            strtoupper(basename($file, '.php'))
-                        ),
-                        $symbol
-                    );
-                }
-            }
-        }
-
-        return static::$instances[$pattern];
     }
 }

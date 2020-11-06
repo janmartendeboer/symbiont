@@ -12,15 +12,16 @@
 declare(strict_types=1);
 
 use Symbiont\Language\Ast\Statement\StatementListInterface;
+use Symbiont\Language\Specification\Specification;
 
-$parser = require __DIR__ . '/../../lang/parser.php';
-$tokenizer = require __DIR__ . '/tokenize.php';
-
-return function (
-    SplFileObject $file
-) use (
-    $parser,
-    $tokenizer
-): StatementListInterface {
-    return $parser($tokenizer($file));
-};
+return (function (Specification $specification): callable {
+    return function (
+        SplFileObject $file
+    ) use (
+        $specification
+    ): StatementListInterface {
+        return $specification->parser->__invoke(
+            $specification->tokenizer->__invoke($file)
+        );
+    };
+})(require __DIR__ . '/../../lang/symbiont/v1/spec.php');

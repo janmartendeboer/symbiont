@@ -11,9 +11,9 @@
 
 declare(strict_types=1);
 
-use Symbiont\Language\Parser\Symbol\SymbolTable;
+use Symbiont\Language\Specification\ConfiguratorInterface;
+use Symbiont\Language\Specification\Specification;
 use Symbiont\Language\Tokenizer\Finder\TokenFinder;
-use Symbiont\Language\Tokenizer\Optimizer\TokenOptimizer;
 use Symbiont\Language\Tokenizer\StatelessTokenizer;
 use Symbiont\Language\Tokenizer\Strategy\CommentStrategy;
 use Symbiont\Language\Tokenizer\Strategy\NumberStrategy;
@@ -21,19 +21,18 @@ use Symbiont\Language\Tokenizer\Strategy\SymbolStrategy;
 use Symbiont\Language\Tokenizer\Strategy\VariableStrategy;
 use Symbiont\Language\Tokenizer\Strategy\WhitespaceStrategy;
 
-return new TokenOptimizer(
-    new StatelessTokenizer(
-        new TokenFinder(
-            new WhitespaceStrategy(),
-            new CommentStrategy(),
-            new VariableStrategy(),
-            new NumberStrategy(),
-            new SymbolStrategy(
-                SymbolTable::getInstance(__DIR__ . '/symbol/*/*.php')
-            )
-        ),
-        'T_END_PROGRAM'
-    ),
-    WhitespaceStrategy::TOKEN_NAME,
-    CommentStrategy::TOKEN_NAME
-);
+return new class implements ConfiguratorInterface {
+    public function __invoke(Specification $spec): void
+    {
+        $spec->tokenizer = new StatelessTokenizer(
+            new TokenFinder(
+                new WhitespaceStrategy(),
+                new CommentStrategy(),
+                new VariableStrategy(),
+                new NumberStrategy(),
+                new SymbolStrategy($spec->symbols)
+            ),
+            $spec->programMarkers->end
+        );
+    }
+};
