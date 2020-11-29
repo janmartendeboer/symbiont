@@ -11,10 +11,13 @@
 
 declare(strict_types=1);
 
+use Symbiont\Language\Specification\Specification;
 use Symbiont\Language\Tokenizer\TokenStream;
 
-$tokenizer = require __DIR__ . '/../../lang/tokenizer.php';
-
-return function (SplFileInfo $file) use ($tokenizer): TokenStream {
-    return new TokenStream($tokenizer($file));
-};
+return (function (Specification $specification): callable {
+    return function (SplFileInfo $file) use ($specification): TokenStream {
+        return new TokenStream(
+            $specification->tokenizer->__invoke($file)
+        );
+    };
+})(require __DIR__ . '/../../lang/symbiont/v1/spec.php');

@@ -11,13 +11,16 @@
 
 declare(strict_types=1);
 
-use Symbiont\Language\Parser\Parser;
-use Symbiont\Language\Parser\Symbol\SymbolTable;
+namespace Symbiont\Language\Specification;
 
-return new Parser(
-    SymbolTable::getInstance(__DIR__ . '/symbol/*/*.php'),
-    'T_CURLY_OPEN',
-    'T_CURLY_CLOSE',
-    'T_END_STATEMENT',
-    'T_END_PROGRAM'
-);
+interface ConfiguratorInterface
+{
+    /**
+     * Configure the supplied specification.
+     *
+     * @param Specification $spec
+     *
+     * @return void
+     */
+    public function __invoke(Specification $spec): void;
+}

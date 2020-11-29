@@ -21,7 +21,7 @@ class TokenStream extends IteratorIterator implements TokenStreamInterface
     /**
      * Constructor.
      *
-     * @param Iterator|TokenInterface[] $tokens
+     * @param Iterator<TokenInterface> $tokens
      */
     public function __construct(Iterator $tokens)
     {
